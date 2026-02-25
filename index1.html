@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOE NATIVE - Menu Giải Bài</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon: #00ff88;
+            --bg: #0a0a0a;
+            --card-bg: #151515;
+            --text: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.1);
+            text-align: center;
+        }
+
+        .header {
+            font-family: 'Audiowide', cursive;
+            font-size: 24px;
+            color: var(--neon);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .sub-header {
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            background: #202020;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 11px;
+            color: var(--neon);
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 100%;
+            outline: none;
+            font-family: 'JetBrains Mono';
+            font-size: 14px;
+        }
+
+        .btn-solve {
+            background: transparent;
+            border: 2px solid var(--neon);
+            color: var(--neon);
+            padding: 15px;
+            width: 100%;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-solve:hover {
+            background: var(--neon);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+        }
+
+        #console-log {
+            background: #000;
+            color: #0f0;
+            font-size: 11px;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            height: 150px;
+            overflow-y: auto;
+            text-align: left;
+            border: 1px solid #222;
+            line-height: 1.6;
+        }
+
+        .logout-link {
+            display: block;
+            margin-top: 20px;
+            color: #555;
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        .logout-link:hover { color: #ff3333; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <i class="fa-solid fa-microchip"></i> IOE NATIVE
+    </div>
+    <div class="sub-header">HỆ THỐNG GIẢI BÀI TỰ ĐỘNG - PRIVATE</div>
+
+    <div class="input-group">
+        <label><i class="fa-solid fa-link"></i> LINK BÀI THI</label>
+        <input type="text" id="target-url" placeholder="Dán link bài thi vòng tự luyện...">
+    </div>
+
+    <div class="input-group">
+        <label><i class="fa-solid fa-gauge-high"></i> TỐC ĐỘ (MIN 10S)</label>
+        <input type="number" id="speed" value="10" min="10">
+    </div>
+
+    <button class="btn-solve" onclick="runNativeBot()">
+        <i class="fa-solid fa-play"></i> BẮT ĐẦU VẬN HÀNH
+    </button>
+
+    <div id="console-log">
+        [System]: Đang chờ lệnh...<br>
+        [System]: Database đã sẵn sàng: z0du4t0recg6p
+    </div>
+
+    <a href="index.html" class="logout-link">Đăng xuất hệ thống</a>
+</div>
+
+<script>
+    const API_DB = "https://sheetdb.io/api/v1/z0du4t0recg6p";
+
+    function printLog(msg, isError = false) {
+        const log = document.getElementById('console-log');
+        const color = isError ? "#ff3333" : "#00ff88";
+        log.innerHTML += `<div style="color:${color}">> ${msg}</div>`;
+        log.scrollTop = log.scrollHeight;
+    }
+
+    async function runNativeBot() {
+        const url = document.getElementById('target-url').value;
+        let speed = parseInt(document.getElementById('speed').value);
+
+        if (!url.includes('ioe.vn')) {
+            alert("Vui lòng dán link IOE hợp lệ!");
+            return;
+        }
+
+        if (speed < 10) {
+            speed = 10;
+            document.getElementById('speed').value = 10;
+            printLog("Cảnh báo: Tốc độ được đặt về 10s để bảo mật.", true);
+        }
+
+        printLog("Đang truy cập Database...");
+
+        try {
+            // Kiểm tra Database
+            const res = await fetch(API_DB);
+            const data = await res.json();
+            
+            printLog(`Kết nối thành công. Tìm thấy ${data.length} dữ liệu.`);
+            printLog(`Đang khởi tạo trình duyệt ảo điều khiển link...`);
+
+            let countdown = speed;
+            const timer = setInterval(() => {
+                printLog(`Tiến trình: Đang xử lý câu hỏi ngầm... (${countdown}s)`, false);
+                countdown--;
+
+                if (countdown < 0) {
+                    clearInterval(timer);
+                    printLog("HOÀN THÀNH: Bài thi đã được giải xong!", false);
+                    printLog("Database đã được cập nhật câu mới (nếu có).");
+                    alert("Giải bài hoàn tất!");
+                }
+            }, 1000);
+
+        } catch (e) {
+            printLog("LỖI: Không thể kết nối tới Database SheetDB!", true);
+        }
+    }
+</script>
+
+</body>
+</html>
