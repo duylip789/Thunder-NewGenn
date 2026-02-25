@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IOE NATIVE</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Audiowide&display=swap" rel="stylesheet">
+    <title>IOE Native</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,35 +13,40 @@
     <div id="particles-js"></div>
 
     <div class="wrapper">
-        <h1 class="ioe-title">IOE NATIVE</h1>
+        <h1 class="ioe-title">IOE Native</h1>
 
         <div class="login-card">
-            <div id="reg-area">
+            <div id="log-area">
                 <div class="field">
-                    <input type="text" id="name" placeholder="FULL NAME">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="text" placeholder="Email address">
                 </div>
                 <div class="field">
-                    <input type="email" id="email" placeholder="EMAIL ADDRESS">
-                </div>
-                <div class="field">
-                    <input type="password" id="pass" placeholder="PASSWORD">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" placeholder="Password">
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-main" onclick="doRegister()">SIGN UP</button>
-                    <button class="btn btn-sub" onclick="swap()">LOGIN</button>
+                    <button class="btn btn-main">Login</button>
+                    <button class="btn btn-sub" onclick="swap()">Register</button>
                 </div>
             </div>
 
-            <div id="log-area" style="display: none;">
+            <div id="reg-area" style="display: none;">
                 <div class="field">
-                    <input type="text" placeholder="USER EMAIL">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="name" placeholder="Full name">
                 </div>
                 <div class="field">
-                    <input type="password" placeholder="PASSWORD">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="email" placeholder="Email address">
+                </div>
+                <div class="field">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="pass" placeholder="Password">
                 </div>
                 <div class="btn-group">
-                    <button class="btn btn-main">ENTER SYSTEM</button>
-                    <button class="btn btn-sub" onclick="swap()">SIGN UP</button>
+                    <button class="btn btn-main" onclick="doRegister()">Create Account</button>
+                    <button class="btn btn-sub" onclick="swap()">Back to Login</button>
                 </div>
             </div>
         </div>
