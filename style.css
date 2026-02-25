@@ -1,14 +1,19 @@
 /* style.css */
+:root {
+    --neon: #00ff88; /* Màu xanh neon file gốc */
+    --bg: #0a0a0a;
+}
+
 * {
-    font-family: 'Courier New', Courier, monospace !important;
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    background-color: #000;
+    background-color: var(--bg);
     overflow: hidden;
+    height: 100vh;
 }
 
 #particles-js {
@@ -18,64 +23,62 @@ body {
     z-index: 1;
 }
 
-.container {
+.wrapper {
     position: relative;
     z-index: 2;
     display: flex;
-    flex-direction: column; /* Xếp tiêu đề trên, menu dưới */
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
 }
 
-/* Tiêu đề IOE NATIVE phát sáng rực rỡ */
-.main-title {
-    color: #00ff41;
-    font-size: 60px;
-    margin-bottom: 20px;
+/* Tiêu đề IOE NATIVE chuẩn font file gốc */
+.ioe-title {
+    font-family: 'Audiowide', cursive;
+    color: var(--neon);
+    font-size: clamp(30px, 8vw, 55px);
+    margin-bottom: 25px;
     text-transform: uppercase;
-    letter-spacing: 10px;
-    text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 40px #00ff41;
-    animation: glow 1.5s ease-in-out infinite alternate;
+    letter-spacing: 5px;
+    text-shadow: 0 0 15px var(--neon);
+    text-align: center;
 }
 
-@keyframes glow {
-    from { text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41; }
-    to { text-shadow: 0 0 20px #00ff41, 0 0 40px #00ff41, 0 0 60px #00ff41; }
+/* Menu thu nhỏ lại 1 tí */
+.login-card {
+    width: 340px; 
+    background: rgba(15, 15, 15, 0.95);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    padding: 30px;
+    border-radius: 4px;
 }
 
-/* Menu thu bé lại 1 tí */
-.login-box {
-    width: 360px; /* Thu nhỏ chiều rộng */
-    padding: 25px;
-    background: rgba(0, 0, 0, 0.8);
-    border: 1px solid rgba(0, 255, 65, 0.3);
-    border-radius: 10px;
-}
-
-.input-group {
+.field {
     margin-bottom: 15px;
 }
 
-.input-group input {
+/* CHỮ NHẬP VÀO MÀU TRẮNG */
+.field input {
     width: 100%;
     padding: 12px;
-    background: rgba(30, 30, 30, 0.9);
+    background: #151515;
     border: 1px solid #333;
-    color: #ffffff !important; /* Chữ khi nhập là màu TRẮNG */
-    font-size: 16px;
+    color: #ffffff !important; /* Luôn là màu trắng */
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
     outline: none;
     transition: 0.3s;
 }
 
-/* Làm các màu sáng lên khi click vào ô nhập */
-.input-group input:focus {
-    border-color: #00ff41;
-    background: rgba(40, 40, 40, 1);
-    box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+/* Làm sáng màu khi gõ */
+.field input:focus {
+    border-color: var(--neon);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+    background: #1a1a1a;
 }
 
-.button-group {
+.btn-group {
     display: flex;
     gap: 10px;
     margin-top: 20px;
@@ -84,25 +87,25 @@ body {
 .btn {
     flex: 1;
     padding: 12px;
-    font-size: 16px;
-    font-weight: bold;
     cursor: pointer;
-    border: 2px solid #00ff41;
+    border: 1px solid var(--neon);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    text-transform: uppercase;
     transition: 0.3s;
 }
 
-.btn-primary {
-    background: #00ff41;
-    color: #000 !important;
-    box-shadow: 0 0 10px #00ff41;
+.btn-main {
+    background: var(--neon);
+    color: #000;
 }
 
-.btn-outline {
+.btn-sub {
     background: transparent;
-    color: #00ff41;
+    color: var(--neon);
 }
 
 .btn:hover {
-    box-shadow: 0 0 20px #00ff41;
-    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--neon);
+    transform: translateY(-2px);
 }
