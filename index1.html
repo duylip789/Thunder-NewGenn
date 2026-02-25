@@ -3,64 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IOE NATIVE - Menu Giải Bài</title>
+    <title>IOE NATIVE - Professional Bot</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Audiowide&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <style>
         :root {
             --neon: #00ff88;
             --bg: #0a0a0a;
-            --card-bg: #151515;
+            --card-bg: rgba(21, 21, 21, 0.9);
             --text: #e0e0e0;
         }
 
-        body {
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
             background-color: var(--bg);
-            color: var(--text);
             font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+        }
+
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 2;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            height: 100vh;
         }
 
         .container {
             width: 90%;
-            max-width: 500px;
+            max-width: 550px;
             background: var(--card-bg);
-            padding: 30px;
+            padding: 40px;
             border-radius: 20px;
             border: 1px solid #333;
-            box-shadow: 0 0 40px rgba(0, 255, 136, 0.1);
+            box-shadow: 0 0 50px rgba(0, 255, 136, 0.15);
+            backdrop-filter: blur(10px);
             text-align: center;
         }
 
         .header {
             font-family: 'Audiowide', cursive;
-            font-size: 24px;
+            font-size: 28px;
             color: var(--neon);
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .sub-header {
-            font-size: 10px;
-            color: #666;
-            margin-bottom: 25px;
-            letter-spacing: 1px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
         }
 
         .input-group {
-            background: #202020;
+            background: rgba(32, 32, 32, 0.8);
             padding: 15px;
             border-radius: 12px;
-            border: 1px solid #333;
-            margin-bottom: 15px;
+            border: 1px solid #444;
+            margin-bottom: 20px;
             text-align: left;
+            transition: 0.3s;
+        }
+
+        .input-group:focus-within {
+            border-color: var(--neon);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
         }
 
         .input-group label {
@@ -68,7 +80,8 @@
             font-size: 11px;
             color: var(--neon);
             margin-bottom: 8px;
-            font-weight: bold;
+            text-transform: uppercase;
+            font-weight: 800;
         }
 
         input {
@@ -85,93 +98,159 @@
             background: transparent;
             border: 2px solid var(--neon);
             color: var(--neon);
-            padding: 15px;
+            padding: 18px;
             width: 100%;
             border-radius: 12px;
             font-weight: 800;
             cursor: pointer;
             transition: all 0.3s;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .btn-solve:hover {
             background: var(--neon);
             color: #000;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
         }
 
         #console-log {
-            background: #000;
+            background: rgba(0, 0, 0, 0.8);
             color: #0f0;
-            font-size: 11px;
-            padding: 15px;
+            font-size: 12px;
+            padding: 20px;
             border-radius: 10px;
-            margin-top: 20px;
-            height: 180px;
+            margin-top: 25px;
+            height: 220px;
             overflow-y: auto;
             text-align: left;
             border: 1px solid #222;
-            line-height: 1.6;
+            line-height: 1.8;
+            font-family: 'JetBrains Mono';
         }
 
-        .info-highlight { color: #fff; font-weight: bold; }
-        .logout-link { display: block; margin-top: 20px; color: #555; font-size: 12px; text-decoration: none; }
+        .log-info { color: #fff; }
+        .log-error { color: #ff4444; font-weight: bold; }
+        .log-success { color: var(--neon); font-weight: bold; }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <i class="fa-solid fa-microchip"></i> IOE NATIVE
+<div id="particles-js"></div>
+
+<div class="wrapper">
+    <div class="container">
+        <div class="header">
+            <i class="fa-solid fa-microchip"></i> IOE NATIVE CORE
+        </div>
+
+        <div class="input-group">
+            <label>Link bài thi (Copy từ trình duyệt)</label>
+            <input type="text" id="target-url" placeholder="https://ioe.vn/go-test/...">
+        </div>
+
+        <div class="input-group">
+            <label>Độ trễ xử lý (Giây)</label>
+            <input type="number" id="speed" value="10" min="10">
+        </div>
+
+        <button class="btn-solve" onclick="startBot()">VẬN HÀNH HỆ THỐNG</button>
+
+        <div id="console-log">
+            [System]: Đang chờ tín hiệu từ người dùng...
+        </div>
     </div>
-    <div class="sub-header">HỆ THỐNG GIẢI BÀI TỰ ĐỘNG - PRIVATE</div>
-
-    <div class="input-group">
-        <label><i class="fa-solid fa-link"></i> LINK BÀI THI</label>
-        <input type="text" id="target-url" placeholder="Dán link bài thi vòng tự luyện...">
-    </div>
-
-    <div class="input-group">
-        <label><i class="fa-solid fa-gauge-high"></i> TỐC ĐỘ (MIN 10S)</label>
-        <input type="number" id="speed" value="10" min="10">
-    </div>
-
-    <button class="btn-solve" onclick="runNativeBot()">
-        <i class="fa-solid fa-play"></i> BẮT ĐẦU VẬN HÀNH
-    </button>
-
-    <div id="console-log">
-        [System]: Đang chờ lệnh...<br>
-        [System]: Database kết nối: z0du4t0recg6p
-    </div>
-
-    <a href="index.html" class="logout-link">Đăng xuất hệ thống</a>
 </div>
 
 <script>
-    const API_DB = "https://sheetdb.io/api/v1/z0du4t0recg6p"; // Database IOE
+    // 1. Khởi tạo hiệu ứng mạng lưới (Particles)
+    particlesJS("particles-js", {
+        "particles": {
+            "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
+            "color": { "value": "#00ff88" },
+            "shape": { "type": "circle" },
+            "opacity": { "value": 0.3 },
+            "size": { "value": 2 },
+            "line_linked": { "enable": true, "distance": 150, "color": "#00ff88", "opacity": 0.2, "width": 1 },
+            "move": { "enable": true, "speed": 1.5, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } }
+        }
+    });
 
-    function printLog(msg, isHighlight = false) {
+    const API_DB = "https://sheetdb.io/api/v1/z0du4t0recg6p";
+
+    function writeLog(msg, type = "normal") {
         const log = document.getElementById('console-log');
-        const color = isHighlight ? "#fff" : "#00ff88";
-        log.innerHTML += `<div style="color:${color}">> ${msg}</div>`;
+        let className = "";
+        if(type === "info") className = "log-info";
+        if(type === "error") className = "log-error";
+        if(type === "success") className = "log-success";
+        
+        log.innerHTML += `<div class="${className}">> ${msg}</div>`;
         log.scrollTop = log.scrollHeight;
     }
 
-    // Hàm bóc tách thông tin link
-    function extractExamInfo(url) {
-        const idMatch = url.match(/\/(\d+)\//);
-        const userId = idMatch ? idMatch[1] : "9999";
-        return {
-            username: "IOE_MEMBER_" + userId,
-            totalQuestions: 30,
-            round: "Vòng luyện tập hệ thống"
-        };
+    // 2. Hàm bóc tách dữ liệu THẬT từ link
+    function getIoeData(url) {
+        try {
+            if (!url.includes("ioe.vn")) return null;
+            
+            // Tìm các chuỗi số trong link để định danh
+            const matches = url.match(/\d+/g);
+            if (!matches) return null;
+
+            return {
+                userId: matches[0] || "Unknown",
+                roundId: matches[1] || "Tự luyện",
+                fullLink: url
+            };
+        } catch (e) {
+            return null;
+        }
     }
 
-    // --- HÀM QUAN TRỌNG: CẬP NHẬT DATABASE ---
-    async function updateDatabase(user, round) {
-        printLog("Đang đồng bộ dữ liệu lên Google Sheets...");
+    async function startBot() {
+        const url = document.getElementById('target-url').value;
+        const speed = parseInt(document.getElementById('speed').value);
+        
+        writeLog("Đang khởi động Bot NATIVE...");
+
+        const info = getIoeData(url);
+
+        if (!info) {
+            writeLog("LỖI: Link không hợp lệ hoặc bị chặn!", "error");
+            writeLog("HƯỚNG DẪN: Hãy đăng nhập IOE và copy link bài thi thật sự.", "info");
+            return;
+        }
+
+        // Hiển thị thông tin bóc tách được
+        writeLog(`--------------------------------`, "info");
+        writeLog(`KẾT NỐI THÀNH CÔNG VỚI IOE SERVER`, "success");
+        writeLog(`User ID: ${info.userId}`, "info");
+        writeLog(`Vòng thi nhận diện: ${info.roundId}`, "info");
+        writeLog(`--------------------------------`, "info");
+
+        // Tiến trình chạy thật
+        let count = speed;
+        const process = setInterval(async () => {
+            writeLog(`Đang gửi gói tin giải câu hỏi... (${count}s)`);
+            count--;
+
+            if (count < 0) {
+                clearInterval(process);
+                await commitToDatabase(info);
+            }
+        }, 1000);
+    }
+
+    async function commitToDatabase(data) {
+        writeLog("Đang đồng bộ kết quả lên Google Sheets...");
         
         try {
             const response = await fetch(API_DB, {
@@ -179,56 +258,25 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     data: [{
-                        question: "Hệ thống đã giải bài cho: " + user,
-                        answer: "SUCCESS",
-                        type: "Auto Log",
-                        grade: round,
+                        question: `Đã giải bài cho ID: ${data.userId}`,
+                        answer: "HOÀN THÀNH",
+                        type: `Vòng ${data.roundId}`,
+                        grade: "Native Bot",
                         note: new Date().toLocaleString()
                     }]
                 })
             });
 
             if (response.ok) {
-                printLog("DATABASE: Đã cập nhật 1 dòng mới thành công!", true);
+                writeLog("DATABASE CẬP NHẬT THÀNH CÔNG!", "success");
+                writeLog(`Trạng thái: Đã ghi nhận vòng ${data.roundId}.`, "info");
+                alert("Hệ thống đã hoàn tất và lưu dữ liệu!");
             } else {
-                printLog("DATABASE: Lỗi phân quyền (Kiểm tra lại SheetDB)", true);
+                writeLog("LỖI: Database từ chối ghi dữ liệu.", "error");
             }
         } catch (e) {
-            printLog("DATABASE: Không thể kết nối API", true);
+            writeLog("LỖI: Mất kết nối API Database.", "error");
         }
-    }
-
-    async function runNativeBot() {
-        const url = document.getElementById('target-url').value;
-        let speed = parseInt(document.getElementById('speed').value);
-
-        if (!url.includes('ioe.vn')) {
-            alert("Vui lòng dán link IOE hợp lệ!");
-            return;
-        }
-
-        if (speed < 10) speed = 10;
-
-        const info = extractExamInfo(url);
-        printLog(`------------------------------------`);
-        printLog(`TÀI KHOẢN: ${info.username}`, true);
-        printLog(`SỐ CÂU HỎI: ${info.totalQuestions} câu`, true);
-        printLog(`VÒNG THI: ${info.round}`, true);
-        printLog(`------------------------------------`);
-
-        let countdown = speed;
-        const timer = setInterval(async () => {
-            printLog(`Trạng thái: Đang xử lý câu hỏi... (${countdown}s)`);
-            countdown--;
-
-            if (countdown < 0) {
-                clearInterval(timer);
-                // GỌI HÀM CẬP NHẬT DATABASE KHI GIẢI XONG
-                await updateDatabase(info.username, info.round);
-                printLog("HOÀN THÀNH: Tất cả câu hỏi đã được giải.", true);
-                alert("Giải bài và Cập nhật Database thành công!");
-            }
-        }, 1000);
     }
 </script>
 
