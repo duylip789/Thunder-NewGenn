@@ -1,69 +1,49 @@
-// Cấu hình hiệu ứng tia sét kết nối
-particlesJS("particles-js", {
-  "particles": {
-    "number": { "value": 100 },
-    "color": { "value": "#00ff41" },
-    "shape": { "type": "circle" },
-    "opacity": { "value": 0.5 },
-    "size": { "value": 3 },
-    "line_linked": {
-      "enable": true,
-      "distance": 150,
-      "color": "#00ff41",
-      "opacity": 0.4,
-      "width": 1
-    },
-    "move": { "enable": true, "speed": 3 }
-  },
-  "interactivity": {
-    "events": {
-      "onhover": { "enable": true, "mode": "grab" },
-      "onclick": { "enable": true, "mode": "push" }
-    }
-  }
-});
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>IOE NATIVE Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body>
+    <div id="particles-js"></div>
 
-function toggleForm() {
-    const login = document.getElementById('login-form');
-    const register = document.getElementById('register-form');
-    if (login.style.display === "none") {
-        login.style.display = "block";
-        register.style.display = "none";
-    } else {
-        login.style.display = "none";
-        register.style.display = "block";
-    }
-}
+    <div class="container">
+        <h1 class="main-title">IOE NATIVE</h1>
 
-async function handleRegister() {
-    const name = document.getElementById('reg-name').value;
-    const email = document.getElementById('reg-email').value;
-    const password = document.getElementById('reg-pass').value;
+        <div class="login-box">
+            <div id="register-form">
+                <div class="input-group">
+                    <input type="text" id="reg-name" placeholder="FULL NAME" required>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="reg-email" placeholder="EMAIL ADDRESS" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="reg-pass" placeholder="PASSWORD" required>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="handleRegister()">SIGN UP</button>
+                    <button class="btn btn-outline" onclick="toggleForm()">LOGIN</button>
+                </div>
+            </div>
 
-    if (!name || !email || !password) {
-        alert("CRITICAL ERROR: Data missing!");
-        return;
-    }
+            <div id="login-form" style="display: none;">
+                <div class="input-group">
+                    <input type="text" placeholder="EMAIL">
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="PASSWORD">
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="alert('Access Denied')">LOGIN</button>
+                    <button class="btn btn-outline" onclick="toggleForm()">SIGN UP</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    const btn = document.querySelector('#register-form .btn-primary');
-    btn.innerText = "UPLOADING...";
-    btn.disabled = true;
-
-    try {
-        const response = await fetch('https://sheetdb.io/api/v1/nfvpng9qwtmvt', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ data: [{ "name": name, "email": email, "password": password }] })
-        });
-
-        if (response.ok) {
-            alert("ACCESS GRANTED: User encrypted in database!");
-            toggleForm();
-        }
-    } catch (e) {
-        alert("SYSTEM BREACH: Failed to connect!");
-    } finally {
-        btn.innerText = "INITIALIZE";
-        btn.disabled = false;
-    }
-}
+    <script src="script.js"></script>
+</body>
+</html>
