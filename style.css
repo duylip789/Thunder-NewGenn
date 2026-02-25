@@ -1,3 +1,4 @@
+/* style.css */
 :root {
     --neon: #00ff88;
     --bg: #0a0a0a;
@@ -37,9 +38,9 @@ body {
     color: var(--neon);
     font-size: 45px;
     margin-bottom: 25px;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     text-shadow: 0 0 15px var(--neon);
-    /* Không in hoa hết */
+    /* Bỏ in hoa hết */
 }
 
 .login-card {
@@ -51,10 +52,11 @@ body {
 }
 
 .field {
-    margin-bottom: 18px;
-    position: relative; /* Để đặt icon bên trong */
+    margin-bottom: 15px;
+    position: relative; /* Cần thiết để đặt icon vào trong */
 }
 
+/* Định dạng icon trong ô nhập */
 .field i {
     position: absolute;
     left: 12px;
@@ -67,10 +69,10 @@ body {
 
 .field input {
     width: 100%;
-    padding: 12px 12px 12px 40px; /* Cách lề trái để nhường chỗ cho icon */
+    padding: 12px 12px 12px 40px; /* Cách lề trái 40px để nhường chỗ cho icon */
     background: #151515;
     border: 1px solid #333;
-    color: #ffffff !important; /* Chữ nhập màu trắng */
+    color: #ffffff !important; /* Chữ nhập luôn là màu trắng */
     font-family: 'JetBrains Mono', monospace;
     font-size: 14px;
     outline: none;
@@ -85,8 +87,8 @@ body {
 
 .btn-group {
     display: flex;
-    flex-direction: column; /* Xếp chồng nút để menu bé lại */
-    gap: 10px;
+    flex-direction: column;
+    gap: 12px;
     margin-top: 20px;
 }
 
@@ -101,16 +103,18 @@ body {
     border-radius: 4px;
 }
 
+/* Nút chính */
 .btn-main {
     background: var(--neon);
     color: #000;
 }
 
+/* Nút phụ kiểu link */
 .btn-sub {
     background: transparent;
     color: var(--neon);
-    font-size: 13px;
     border: none;
+    font-size: 12px;
     text-decoration: underline;
 }
 
