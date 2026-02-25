@@ -3,38 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng nhập & Đăng ký</title>
+    <title>Hacker Portal - Đăng nhập</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 </head>
 <body>
+    <div id="particles-js"></div>
 
     <div class="container">
-        <div id="login-form">
-            <h2>Đăng nhập</h2>
-            <input type="text" placeholder="Email hoặc số điện thoại">
-            <input type="password" placeholder="Mật khẩu">
-            <button onclick="alert('Tính năng đăng nhập đang phát triển!')">Đăng nhập</button>
-            <div class="toggle-text">
-                Chưa có tài khoản? <span onclick="toggleForm()">Đăng ký ngay</span>
+        <div class="login-box">
+            <h2 class="glitch" data-text="TERMINAL ACCESS">TERMINAL ACCESS</h2>
+            
+            <div id="login-form">
+                <div class="input-group">
+                    <input type="text" id="login-user" required>
+                    <label>Email / Username</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="login-pass" required>
+                    <label>Password</label>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="alert('Access Denied!')">LOGIN</button>
+                    <button class="btn btn-outline" onclick="toggleForm()">SIGN UP</button>
+                </div>
             </div>
-        </div>
 
-        <div id="register-form" style="display: none;">
-            <h2>Đăng ký</h2>
-            <input type="text" placeholder="Họ và tên">
-            <input type="email" placeholder="Địa chỉ Email">
-            <input type="password" placeholder="Mật khẩu mới">
-            <input type="password" placeholder="Xác nhận mật khẩu">
-            
-            <button style="background-color: #42b72a;" onclick="handleRegister()">Tạo tài khoản</button>
-            
-            <div class="toggle-text">
-                Đã có tài khoản? <span onclick="toggleForm()">Quay lại Đăng nhập</span>
+            <div id="register-form" style="display: none;">
+                <div class="input-group">
+                    <input type="text" id="reg-name" required>
+                    <label>Full Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="reg-email" required>
+                    <label>Email Address</label>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="reg-pass" required>
+                    <label>New Password</label>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="handleRegister()">INITIALIZE</button>
+                    <button class="btn btn-outline" onclick="toggleForm()">BACK</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="script.js"></script>
-
 </body>
 </html>
