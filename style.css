@@ -1,10 +1,13 @@
 /* style.css */
+/* 1. Ép toàn bộ trang web dùng font không chân (Arial) */
+* {
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+
 body {
     margin: 0;
     padding: 0;
     background-color: #000;
-    /* Sử dụng font không chân hiện đại, cực kỳ dễ đọc */
-    font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     overflow: hidden;
 }
 
@@ -25,105 +28,82 @@ body {
 }
 
 .login-box {
-    background: rgba(0, 0, 0, 0.92);
-    padding: 45px;
-    /* Viền mỏng sắc nét chuẩn vibe công nghệ */
+    background: rgba(0, 0, 0, 0.9);
+    padding: 40px;
     border: 1px solid #00ff41;
-    box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
-    width: 380px;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+    width: 350px;
     text-align: center;
-    border-radius: 4px; /* Góc hơi vuông nhìn sẽ cứng cáp hơn */
+    border-radius: 8px;
 }
 
 h2 {
     color: #00ff41;
-    letter-spacing: 4px;
-    margin-bottom: 40px;
-    font-weight: 800;
+    margin-bottom: 30px;
+    font-weight: bold;
     text-transform: uppercase;
-    /* Hiệu ứng phát sáng nhẹ cho tiêu đề */
-    text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
+    letter-spacing: 1px;
 }
 
 .input-group {
     position: relative;
-    margin-bottom: 35px;
+    margin-bottom: 25px;
 }
 
 .input-group input {
     width: 100%;
     padding: 10px 0;
     font-size: 16px;
-    color: #fff; 
+    color: #ffffff !important; /* Chữ gõ vào màu trắng */
     background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(0, 255, 65, 0.5);
+    border-bottom: 1px solid #00ff41;
     outline: none;
-    transition: 0.3s;
-}
-
-.input-group input:focus {
-    border-bottom: 2px solid #00ff41;
 }
 
 .input-group label {
     position: absolute;
     top: 10px;
     left: 0;
-    color: rgba(0, 255, 65, 0.7);
+    color: #00ff41;
     pointer-events: none;
     transition: 0.3s;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    font-size: 14px;
 }
 
-/* Hiệu ứng nhãn bay lên khi click */
+/* Khi nhấn vào ô nhập, label bay lên */
 .input-group input:focus ~ label,
 .input-group input:valid ~ label {
-    top: -20px;
-    font-size: 11px;
-    color: #00ff41;
-    font-weight: bold;
+    top: -15px;
+    font-size: 12px;
 }
 
 .button-group {
     display: flex;
-    gap: 12px;
-    margin-top: 30px;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 .btn {
     flex: 1;
-    padding: 14px;
+    padding: 12px;
     font-size: 13px;
-    font-weight: 700;
+    font-weight: bold;
     cursor: pointer;
     border: 1px solid #00ff41;
     background: transparent;
     color: #00ff41;
-    transition: 0.4s;
-    border-radius: 2px;
+    transition: 0.3s;
+    border-radius: 4px;
     text-transform: uppercase;
-    letter-spacing: 1px;
 }
 
 .btn-primary {
     background: #00ff41;
-    color: #000;
+    color: #000 !important; /* Chữ trên nút màu đen */
 }
 
 .btn:hover {
-    background: rgba(0, 255, 65, 0.15);
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
-}
-
-.btn-primary:hover {
-    background: #05da3b;
-    color: #000;
-}
-
-/* Giữ hiệu ứng Glitch nhưng làm cho nó tinh tế hơn */
-.glitch {
-    position: relative;
+    background: rgba(0, 255, 65, 0.2);
+    box-shadow: 0 0 10px #00ff41;
 }
