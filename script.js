@@ -1,39 +1,44 @@
-// 1. Hàm chuyển đổi qua lại giữa Đăng nhập và Đăng ký
 function toggleForm() {
     const login = document.getElementById('login-form');
     const register = document.getElementById('register-form');
     
-    if (login.style.display === "none") {
-        login.style.display = "block";
-        register.style.display = "none";
-    } else {
+    // Đảm bảo style display được thiết lập rõ ràng
+    if (register.style.display === "none" || register.style.display === "") {
         login.style.display = "none";
         register.style.display = "block";
+    } else {
+        login.style.display = "block";
+        register.style.display = "none";
     }
 }
 
-// 2. Hàm xử lý Đăng ký và gửi dữ liệu lên Google Sheets
 async function handleRegister() {
-    // Lấy giá trị từ các ô input
-    const name = document.querySelector('input[placeholder="Họ và tên"]').value;
-    const email = document.querySelector('input[placeholder="Địa chỉ Email"]').value;
-    const password = document.querySelector('input[placeholder="Mật khẩu mới"]').value;
+    // 1. Lấy đúng các ô input bên trong khối register-form để tránh nhầm với form login
+    const regForm = document.getElementById('register-form');
+    const nameInput = regForm.querySelector('input[type="text"]');
+    const emailInput = regForm.querySelector('input[type="email"]');
+    // Lấy ô mật khẩu đầu tiên trong form đăng ký
+    const passwordInput = regForm.querySelector('input[type="password"]');
 
-    // Kiểm tra xem có ô nào bị bỏ trống không
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    // 2. Kiểm tra dữ liệu
     if (!name || !email || !password) {
-        alert("Vui lòng điền đầy đủ thông tin bạn nhé!");
+        alert("Vui lòng điền đầy đủ thông tin!");
         return;
     }
 
-    // Hiệu ứng nút bấm khi đang xử lý
-    const btn = document.querySelector('#register-form button');
+    // 3. Vô hiệu hóa nút bấm
+    const btn = regForm.querySelector('button');
     const originalText = btn.innerText;
-    btn.innerText = "Đang xử lý...";
+    btn.innerText = "Đang gửi dữ liệu...";
     btn.disabled = true;
 
     try {
-        // Gửi dữ liệu đến SheetDB (Link của bạn đã được dán ở đây)
-        const response = await fetch('https://sheetdb.io/api/v1/nfvpng9qwtmvt', {
+        const apiURL = 'https://sheetdb.io/api/v1/nfvpng9qwtmvt';
+        const response = await fetch(apiURL, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -51,19 +56,21 @@ async function handleRegister() {
         });
 
         if (response.ok) {
-            alert("Đăng ký thành công! Bạn có thể kiểm tra Google Sheets ngay.");
-            // Xóa sạch dữ liệu cũ trong ô nhập
-            document.querySelectorAll('input').forEach(input => input.value = '');
-            // Quay về màn hình đăng nhập
+            alert("Đăng ký thành công!");
+            // Xóa trắng ô nhập
+            nameInput.value = "";
+            emailInput.value = "";
+            passwordInput.value = "";
+            // Quay về form đăng nhập
             toggleForm();
         } else {
-            alert("Có lỗi xảy ra khi gửi dữ liệu!");
+            const errorData = await response.json();
+            alert("Lỗi từ server: " + (errorData.error || "Không xác định"));
         }
     } catch (error) {
-        alert("Không thể kết nối với máy chủ. Kiểm tra mạng xem sao!");
-        console.error(error);
+        alert("Lỗi kết nối mạng hoặc sai link API!");
+        console.error("Chi tiết lỗi:", error);
     } finally {
-        // Trả lại trạng thái nút bấm ban đầu
         btn.innerText = originalText;
         btn.disabled = false;
     }
