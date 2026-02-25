@@ -1,49 +1,54 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>IOE NATIVE Portal</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-</head>
-<body>
-    <div id="particles-js"></div>
+/* script.js */
 
-    <div class="container">
-        <h1 class="main-title">IOE NATIVE</h1>
+// 1. Kích hoạt mạng lưới tia sét
+particlesJS("particles-js", {
+    "particles": {
+        "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": "#00ff88" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.5 },
+        "size": { "value": 2 },
+        "line_linked": { 
+            "enable": true, 
+            "distance": 150, 
+            "color": "#00ff88", 
+            "opacity": 0.4, 
+            "width": 1 
+        },
+        "move": { "enable": true, "speed": 2.5 }
+    },
+    "interactivity": {
+        "events": { "onhover": { "enable": true, "mode": "grab" } }
+    }
+});
 
-        <div class="login-box">
-            <div id="register-form">
-                <div class="input-group">
-                    <input type="text" id="reg-name" placeholder="FULL NAME" required>
-                </div>
-                <div class="input-group">
-                    <input type="email" id="reg-email" placeholder="EMAIL ADDRESS" required>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="reg-pass" placeholder="PASSWORD" required>
-                </div>
-                <div class="button-group">
-                    <button class="btn btn-primary" onclick="handleRegister()">SIGN UP</button>
-                    <button class="btn btn-outline" onclick="toggleForm()">LOGIN</button>
-                </div>
-            </div>
+// 2. Chuyển đổi Form
+function swap() {
+    const r = document.getElementById('reg-area');
+    const l = document.getElementById('log-area');
+    r.style.display = (r.style.display === 'none') ? 'block' : 'none';
+    l.style.display = (l.style.display === 'none') ? 'block' : 'none';
+}
 
-            <div id="login-form" style="display: none;">
-                <div class="input-group">
-                    <input type="text" placeholder="EMAIL">
-                </div>
-                <div class="input-group">
-                    <input type="password" placeholder="PASSWORD">
-                </div>
-                <div class="button-group">
-                    <button class="btn btn-primary" onclick="alert('Access Denied')">LOGIN</button>
-                    <button class="btn btn-outline" onclick="toggleForm()">SIGN UP</button>
-                </div>
-            </div>
-        </div>
-    </div>
+// 3. Gửi dữ liệu về SheetDB
+async function doRegister() {
+    const n = document.getElementById('name').value;
+    const e = document.getElementById('email').value;
+    const p = document.getElementById('pass').value;
 
-    <script src="script.js"></script>
-</body>
-</html>
+    if (!n || !e || !p) return alert("Vui lòng nhập đủ thông tin!");
+
+    try {
+        const res = await fetch('https://sheetdb.io/api/v1/nfvpng9qwtmvt', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ data: [{ name: n, email: e, password: p }] })
+        });
+        if (res.ok) {
+            alert("ĐĂNG KÝ THÀNH CÔNG!");
+            swap();
+        }
+    } catch (err) {
+        alert("Lỗi kết nối database!");
+    }
+}
