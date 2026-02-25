@@ -1,44 +1,46 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>IOE NATIVE Portal</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOE NATIVE</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Audiowide&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="particles-js"></div>
 
-    <div class="container">
-        <h1 class="main-title">IOE NATIVE</h1>
+    <div class="wrapper">
+        <h1 class="ioe-title">IOE NATIVE</h1>
 
-        <div class="login-box">
-            <div id="register-form">
-                <div class="input-group">
-                    <input type="text" id="reg-name" placeholder="FULL NAME" required>
+        <div class="login-card">
+            <div id="reg-area">
+                <div class="field">
+                    <input type="text" id="name" placeholder="FULL NAME">
                 </div>
-                <div class="input-group">
-                    <input type="email" id="reg-email" placeholder="EMAIL ADDRESS" required>
+                <div class="field">
+                    <input type="email" id="email" placeholder="EMAIL ADDRESS">
                 </div>
-                <div class="input-group">
-                    <input type="password" id="reg-pass" placeholder="PASSWORD" required>
+                <div class="field">
+                    <input type="password" id="pass" placeholder="PASSWORD">
                 </div>
-                <div class="button-group">
-                    <button class="btn btn-primary" onclick="handleRegister()">SIGN UP</button>
-                    <button class="btn btn-outline" onclick="toggleForm()">LOGIN</button>
+                <div class="btn-group">
+                    <button class="btn btn-main" onclick="doRegister()">SIGN UP</button>
+                    <button class="btn btn-sub" onclick="swap()">LOGIN</button>
                 </div>
             </div>
 
-            <div id="login-form" style="display: none;">
-                <div class="input-group">
-                    <input type="text" placeholder="EMAIL">
+            <div id="log-area" style="display: none;">
+                <div class="field">
+                    <input type="text" placeholder="USER EMAIL">
                 </div>
-                <div class="input-group">
+                <div class="field">
                     <input type="password" placeholder="PASSWORD">
                 </div>
-                <div class="button-group">
-                    <button class="btn btn-primary" onclick="alert('Access Denied')">LOGIN</button>
-                    <button class="btn btn-outline" onclick="toggleForm()">SIGN UP</button>
+                <div class="btn-group">
+                    <button class="btn btn-main">ENTER SYSTEM</button>
+                    <button class="btn btn-sub" onclick="swap()">SIGN UP</button>
                 </div>
             </div>
         </div>
