@@ -1,4 +1,4 @@
-// 1. Khởi tạo mạng lưới
+// 1. Khởi tạo mạng lưới particles
 particlesJS("particles-js", {
     "particles": {
         "number": { "value": 90, "density": { "enable": true, "value_area": 800 } },
@@ -28,7 +28,28 @@ function swap() {
     }
 }
 
-// 3. Xử lý đăng ký
+// 3. XỬ LÝ ĐĂNG NHẬP (MỚI THÊM)
+async function doLogin() {
+    // Lấy giá trị từ các ô input trong log-area (Cần thêm ID vào HTML nếu chưa có)
+    const email = document.querySelector('#log-area input[type="text"]').value;
+    const pass = document.querySelector('#log-area input[type="password"]').value;
+
+    if (!email || !pass) {
+        alert("Vui lòng nhập Email và Mật khẩu!");
+        return;
+    }
+
+    // Hiệu ứng giả lập đang kiểm tra
+    console.log("Đang xác thực tài khoản...");
+    
+    // Ở đây bạn có thể thêm fetch để check tài khoản từ Database
+    // Nhưng để chạy nhanh theo yêu cầu của bạn, mình sẽ cho chuyển hướng luôn:
+    
+    alert("Đăng nhập thành công!");
+    window.location.href = "index1.html"; 
+}
+
+// 4. Xử lý đăng ký
 async function doRegister() {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
