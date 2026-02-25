@@ -8,8 +8,32 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div class="container">
-        ...
+        <div id="login-form">
+            <h2>Đăng nhập</h2>
+            <input type="text" placeholder="Email hoặc số điện thoại">
+            <input type="password" placeholder="Mật khẩu">
+            <button onclick="alert('Đang đăng nhập...')">Đăng nhập</button>
+            <div class="toggle-text">
+                Chưa có tài khoản? <span onclick="toggleForm()">Đăng ký ngay</span>
+            </div>
+        </div>
+
+        <div id="register-form" style="display: none;">
+            <h2>Đăng ký</h2>
+            <input type="text" placeholder="Họ và tên">
+            <input type="email" placeholder="Địa chỉ Email">
+            <input type="password" placeholder="Mật khẩu mới">
+            <input type="password" placeholder="Xác nhận mật khẩu">
+            <button style="background-color: #42b72a;" onclick="alert('Đang đăng ký...')">Tạo tài khoản</button>
+            <div class="toggle-text">
+                Đã có tài khoản? <span onclick="toggleForm()">Quay lại Đăng nhập</span>
+            </div>
+        </div>
     </div>
+
+    <script src="script.js"></script>
+
 </body>
 </html>
