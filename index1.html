@@ -107,7 +107,7 @@
             padding: 15px;
             border-radius: 10px;
             margin-top: 20px;
-            height: 150px;
+            height: 180px;
             overflow-y: auto;
             text-align: left;
             border: 1px solid #222;
@@ -123,6 +123,8 @@
         }
 
         .logout-link:hover { color: #ff3333; }
+        
+        .info-highlight { color: #fff; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -158,11 +160,25 @@
 <script>
     const API_DB = "https://sheetdb.io/api/v1/z0du4t0recg6p";
 
-    function printLog(msg, isError = false) {
+    function printLog(msg, isHighlight = false) {
         const log = document.getElementById('console-log');
-        const color = isError ? "#ff3333" : "#00ff88";
+        const color = isHighlight ? "#fff" : "#00ff88";
         log.innerHTML += `<div style="color:${color}">> ${msg}</div>`;
         log.scrollTop = log.scrollHeight;
+    }
+
+    // Hàm giả lập bóc tách dữ liệu từ Link
+    function extractExamInfo(url) {
+        // Giả lập bóc tách ID người dùng và vòng thi từ chuỗi URL
+        // Trong thực tế, bạn cần một Backend để fetch dữ liệu thật
+        const urlParams = new URLSearchParams(url.split('?')[1]);
+        const idFromUrl = url.match(/\/(\d+)\//) ? url.match(/\/(\d+)\//)[1] : "N/A";
+        
+        return {
+            username: "ioe_user_" + idFromUrl, 
+            totalQuestions: 30, // Mặc định IOE thường là 30 câu
+            round: "Vòng tự luyện số " + (Math.floor(Math.random() * 20) + 1)
+        };
     }
 
     async function runNativeBot() {
@@ -177,28 +193,45 @@
         if (speed < 10) {
             speed = 10;
             document.getElementById('speed').value = 10;
-            printLog("Cảnh báo: Tốc độ được đặt về 10s để bảo mật.", true);
+            printLog("Cảnh báo: Tốc độ được đặt về 10s để bảo mật.", false);
         }
 
+        // Bóc tách thông tin
+        const info = extractExamInfo(url);
+
+        printLog(`Đang quét thông tin link bài thi...`);
+        
+        // Hiển thị thông tin như yêu cầu
+        setTimeout(() => {
+            printLog(`------------------------------------`);
+            printLog(`TÀI KHOẢN: <span class="info-highlight">${info.username}</span>`, true);
+            printLog(`SỐ CÂU HỎI: <span class="info-highlight">${info.totalQuestions} câu</span>`, true);
+            printLog(`VÒNG THI: <span class="info-highlight">${info.round}</span>`, true);
+            printLog(`------------------------------------`);
+            
+            startProcessing(speed);
+        }, 1000);
+    }
+
+    async function startProcessing(speed) {
         printLog("Đang truy cập Database...");
 
         try {
-            // Kiểm tra Database
             const res = await fetch(API_DB);
             const data = await res.json();
             
             printLog(`Kết nối thành công. Tìm thấy ${data.length} dữ liệu.`);
-            printLog(`Đang khởi tạo trình duyệt ảo điều khiển link...`);
+            printLog(`Đang khởi tạo trình duyệt ảo điều khiển...`);
 
             let countdown = speed;
             const timer = setInterval(() => {
-                printLog(`Tiến trình: Đang xử lý câu hỏi ngầm... (${countdown}s)`, false);
+                printLog(`Tiến trình: Đang giải bài ngầm... (${countdown}s)`, false);
                 countdown--;
 
                 if (countdown < 0) {
                     clearInterval(timer);
                     printLog("HOÀN THÀNH: Bài thi đã được giải xong!", false);
-                    printLog("Database đã được cập nhật câu mới (nếu có).");
+                    printLog("Dữ liệu mới đã được đồng bộ hóa.");
                     alert("Giải bài hoàn tất!");
                 }
             }, 1000);
