@@ -18,7 +18,6 @@ particlesJS("particles-js", {
 function swap() {
     const reg = document.getElementById('reg-area');
     const log = document.getElementById('log-area');
-    
     if (log.style.display === "none") {
         log.style.display = "block";
         reg.style.display = "none";
@@ -28,28 +27,43 @@ function swap() {
     }
 }
 
-// 3. XỬ LÝ ĐĂNG NHẬP (MỚI THÊM)
+// 3. XỬ LÝ ĐĂNG NHẬP (KIỂM TRA DATABASE THẬT)
 async function doLogin() {
-    // Lấy giá trị từ các ô input trong log-area (Cần thêm ID vào HTML nếu chưa có)
-    const email = document.querySelector('#log-area input[type="text"]').value;
-    const pass = document.querySelector('#log-area input[type="password"]').value;
+    // Lấy thông tin từ các ô input trong log-area (Dùng querySelector để chính xác)
+    const emailInput = document.querySelector('#log-area input[type="text"]').value;
+    const passInput = document.querySelector('#log-area input[type="password"]').value;
 
-    if (!email || !pass) {
-        alert("Vui lòng nhập Email và Mật khẩu!");
+    if (!emailInput || !passInput) {
+        alert("Please enter email and password.");
         return;
     }
 
-    // Hiệu ứng giả lập đang kiểm tra
-    console.log("Đang xác thực tài khoản...");
-    
-    // Ở đây bạn có thể thêm fetch để check tài khoản từ Database
-    // Nhưng để chạy nhanh theo yêu cầu của bạn, mình sẽ cho chuyển hướng luôn:
-    
-    alert("Đăng nhập thành công!");
-    window.location.href = "index1.html"; 
+    try {
+        // Gọi API SheetDB để tìm kiếm user có email này
+        // Lưu ý: Dùng /search để lọc cho nhanh
+        const response = await fetch(`https://sheetdb.io/api/v1/nfvpng9qwtmvt/search?email=${emailInput}`);
+        const users = await response.json();
+
+        if (users.length > 0) {
+            // Tìm thấy email, giờ kiểm tra mật khẩu
+            const user = users[0];
+            if (user.password === passInput) {
+                alert("Login successful!");
+                // DÒNG CHUYỂN HƯỚNG ĐÂY:
+                window.location.href = "index1.html";
+            } else {
+                alert("Incorrect password!");
+            }
+        } else {
+            alert("Email not found! Please register first.");
+        }
+    } catch (e) {
+        console.error(e);
+        alert("System error! Please try again later.");
+    }
 }
 
-// 4. Xử lý đăng ký
+// 4. Xử lý đăng ký (Giữ nguyên của bạn)
 async function doRegister() {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
