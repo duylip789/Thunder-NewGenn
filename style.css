@@ -3,8 +3,8 @@ body {
     margin: 0;
     padding: 0;
     background-color: #000;
-    /* Đổi sang font hiện đại, dễ đọc */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Sử dụng font không chân hiện đại, cực kỳ dễ đọc */
+    font-family: 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     overflow: hidden;
 }
 
@@ -25,77 +25,87 @@ body {
 }
 
 .login-box {
-    background: rgba(0, 0, 0, 0.9);
-    padding: 40px;
-    border: 2px solid #00ff41;
-    box-shadow: 0 0 25px rgba(0, 255, 65, 0.3);
-    width: 400px;
+    background: rgba(0, 0, 0, 0.92);
+    padding: 45px;
+    /* Viền mỏng sắc nét chuẩn vibe công nghệ */
+    border: 1px solid #00ff41;
+    box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
+    width: 380px;
     text-align: center;
-    border-radius: 12px; /* Bo góc nhìn hiện đại hơn */
+    border-radius: 4px; /* Góc hơi vuông nhìn sẽ cứng cáp hơn */
 }
 
 h2 {
     color: #00ff41;
-    letter-spacing: 2px;
-    margin-bottom: 35px;
-    font-weight: 700;
+    letter-spacing: 4px;
+    margin-bottom: 40px;
+    font-weight: 800;
     text-transform: uppercase;
+    /* Hiệu ứng phát sáng nhẹ cho tiêu đề */
+    text-shadow: 0 0 8px rgba(0, 255, 65, 0.6);
 }
 
 .input-group {
     position: relative;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
 .input-group input {
     width: 100%;
-    padding: 10px 5px;
+    padding: 10px 0;
     font-size: 16px;
-    color: #fff; /* Chữ nhập vào màu trắng cho dễ nhìn */
+    color: #fff; 
     background: transparent;
     border: none;
-    border-bottom: 2px solid #00ff41;
+    border-bottom: 1px solid rgba(0, 255, 65, 0.5);
     outline: none;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    border-bottom: 2px solid #00ff41;
 }
 
 .input-group label {
     position: absolute;
     top: 10px;
-    left: 5px;
-    color: #00ff41;
+    left: 0;
+    color: rgba(0, 255, 65, 0.7);
     pointer-events: none;
     transition: 0.3s;
-    font-size: 14px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* Hiệu ứng khi click vào ô nhập */
+/* Hiệu ứng nhãn bay lên khi click */
 .input-group input:focus ~ label,
 .input-group input:valid ~ label {
     top: -20px;
-    font-size: 12px;
+    font-size: 11px;
     color: #00ff41;
     font-weight: bold;
 }
 
 .button-group {
     display: flex;
-    gap: 15px;
-    margin-top: 25px;
+    gap: 12px;
+    margin-top: 30px;
 }
 
 .btn {
     flex: 1;
     padding: 14px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
-    border: 2px solid #00ff41;
+    border: 1px solid #00ff41;
     background: transparent;
     color: #00ff41;
-    transition: 0.3s;
-    border-radius: 6px;
+    transition: 0.4s;
+    border-radius: 2px;
     text-transform: uppercase;
-    font-family: inherit; /* Sử dụng font chung của body */
+    letter-spacing: 1px;
 }
 
 .btn-primary {
@@ -104,18 +114,16 @@ h2 {
 }
 
 .btn:hover {
-    background: rgba(0, 255, 65, 0.1);
-    box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
-    transform: translateY(-2px);
+    background: rgba(0, 255, 65, 0.15);
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
 }
 
 .btn-primary:hover {
-    background: #00cc33;
+    background: #05da3b;
     color: #000;
 }
 
-/* Hiệu ứng Glitch nhẹ nhàng hơn */
+/* Giữ hiệu ứng Glitch nhưng làm cho nó tinh tế hơn */
 .glitch {
     position: relative;
-    display: inline-block;
 }
