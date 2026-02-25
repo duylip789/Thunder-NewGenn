@@ -18,6 +18,7 @@ particlesJS("particles-js", {
 function swap() {
     const reg = document.getElementById('reg-area');
     const log = document.getElementById('log-area');
+    
     if (log.style.display === "none") {
         log.style.display = "block";
         reg.style.display = "none";
@@ -27,43 +28,41 @@ function swap() {
     }
 }
 
-// 3. XỬ LÝ ĐĂNG NHẬP (KIỂM TRA DATABASE THẬT)
+// 3. Xử lý Đăng nhập (KIỂM TRA TỪ SHEETDB)
 async function doLogin() {
-    // Lấy thông tin từ các ô input trong log-area (Dùng querySelector để chính xác)
-    const emailInput = document.querySelector('#log-area input[type="text"]').value;
-    const passInput = document.querySelector('#log-area input[type="password"]').value;
+    const emailInput = document.getElementById('login-email').value;
+    const passInput = document.getElementById('login-pass').value;
 
     if (!emailInput || !passInput) {
-        alert("Please enter email and password.");
+        alert("Please fill in login details.");
         return;
     }
 
     try {
-        // Gọi API SheetDB để tìm kiếm user có email này
-        // Lưu ý: Dùng /search để lọc cho nhanh
-        const response = await fetch(`https://sheetdb.io/api/v1/nfvpng9qwtmvt/search?email=${emailInput}`);
+        // Tìm kiếm user có email này trong database
+        const response = await fetch(`https://sheetdb.io/api/v1/nfvpng9qwtmvt/search?email=${encodeURIComponent(emailInput)}`);
         const users = await response.json();
 
         if (users.length > 0) {
-            // Tìm thấy email, giờ kiểm tra mật khẩu
+            // Nếu tìm thấy email, kiểm tra password (cột password trong sheet)
             const user = users[0];
             if (user.password === passInput) {
-                alert("Login successful!");
-                // DÒNG CHUYỂN HƯỚNG ĐÂY:
+                alert("Login Successful!");
+                // Dòng này thực hiện chuyển trang đến index1.html
                 window.location.href = "index1.html";
             } else {
-                alert("Incorrect password!");
+                alert("Wrong password!");
             }
         } else {
-            alert("Email not found! Please register first.");
+            alert("Account does not exist. Please register.");
         }
     } catch (e) {
+        alert("Login system error!");
         console.error(e);
-        alert("System error! Please try again later.");
     }
 }
 
-// 4. Xử lý đăng ký (Giữ nguyên của bạn)
+// 4. Xử lý đăng ký
 async function doRegister() {
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
