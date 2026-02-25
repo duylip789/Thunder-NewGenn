@@ -1,54 +1,55 @@
-/* script.js */
-
-// 1. Kích hoạt mạng lưới tia sét
+// 1. Khởi tạo mạng lưới
 particlesJS("particles-js", {
     "particles": {
-        "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
+        "number": { "value": 90, "density": { "enable": true, "value_area": 800 } },
         "color": { "value": "#00ff88" },
         "shape": { "type": "circle" },
         "opacity": { "value": 0.5 },
         "size": { "value": 2 },
-        "line_linked": { 
-            "enable": true, 
-            "distance": 150, 
-            "color": "#00ff88", 
-            "opacity": 0.4, 
-            "width": 1 
-        },
-        "move": { "enable": true, "speed": 2.5 }
+        "line_linked": { "enable": true, "distance": 150, "color": "#00ff88", "opacity": 0.3, "width": 1 },
+        "move": { "enable": true, "speed": 2 }
     },
     "interactivity": {
         "events": { "onhover": { "enable": true, "mode": "grab" } }
     }
 });
 
-// 2. Chuyển đổi Form
+// 2. Chuyển đổi giữa Login và Register
 function swap() {
-    const r = document.getElementById('reg-area');
-    const l = document.getElementById('log-area');
-    r.style.display = (r.style.display === 'none') ? 'block' : 'none';
-    l.style.display = (l.style.display === 'none') ? 'block' : 'none';
+    const reg = document.getElementById('reg-area');
+    const log = document.getElementById('log-area');
+    
+    if (log.style.display === "none") {
+        log.style.display = "block";
+        reg.style.display = "none";
+    } else {
+        log.style.display = "none";
+        reg.style.display = "block";
+    }
 }
 
-// 3. Gửi dữ liệu về SheetDB
+// 3. Xử lý đăng ký
 async function doRegister() {
-    const n = document.getElementById('name').value;
-    const e = document.getElementById('email').value;
-    const p = document.getElementById('pass').value;
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('pass').value;
 
-    if (!n || !e || !p) return alert("Vui lòng nhập đủ thông tin!");
+    if (!name || !email || !pass) {
+        alert("Please fill in all fields.");
+        return;
+    }
 
     try {
-        const res = await fetch('https://sheetdb.io/api/v1/nfvpng9qwtmvt', {
+        const response = await fetch('https://sheetdb.io/api/v1/nfvpng9qwtmvt', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ data: [{ name: n, email: e, password: p }] })
+            body: JSON.stringify({ data: [{ name, email, password: pass }] })
         });
-        if (res.ok) {
-            alert("ĐĂNG KÝ THÀNH CÔNG!");
-            swap();
+        if (response.ok) {
+            alert("Account created successfully!");
+            swap(); // Quay lại login
         }
-    } catch (err) {
-        alert("Lỗi kết nối database!");
+    } catch (e) {
+        alert("System error!");
     }
 }
