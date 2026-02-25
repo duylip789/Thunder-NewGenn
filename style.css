@@ -1,6 +1,5 @@
-/* style.css */
 :root {
-    --neon: #00ff88; /* Màu xanh neon file gốc */
+    --neon: #00ff88;
     --bg: #0a0a0a;
 }
 
@@ -33,66 +32,73 @@ body {
     height: 100%;
 }
 
-/* Tiêu đề IOE NATIVE chuẩn font file gốc */
 .ioe-title {
     font-family: 'Audiowide', cursive;
     color: var(--neon);
-    font-size: clamp(30px, 8vw, 55px);
+    font-size: 45px;
     margin-bottom: 25px;
-    text-transform: uppercase;
-    letter-spacing: 5px;
+    letter-spacing: 3px;
     text-shadow: 0 0 15px var(--neon);
-    text-align: center;
+    /* Không in hoa hết */
 }
 
-/* Menu thu nhỏ lại 1 tí */
 .login-card {
     width: 340px; 
     background: rgba(15, 15, 15, 0.95);
-    border: 1px solid rgba(0, 255, 136, 0.3);
+    border: 1px solid rgba(0, 255, 136, 0.2);
     padding: 30px;
-    border-radius: 4px;
+    border-radius: 8px;
 }
 
 .field {
-    margin-bottom: 15px;
+    margin-bottom: 18px;
+    position: relative; /* Để đặt icon bên trong */
 }
 
-/* CHỮ NHẬP VÀO MÀU TRẮNG */
+.field i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--neon);
+    font-size: 14px;
+    opacity: 0.7;
+}
+
 .field input {
     width: 100%;
-    padding: 12px;
+    padding: 12px 12px 12px 40px; /* Cách lề trái để nhường chỗ cho icon */
     background: #151515;
     border: 1px solid #333;
-    color: #ffffff !important; /* Luôn là màu trắng */
+    color: #ffffff !important; /* Chữ nhập màu trắng */
     font-family: 'JetBrains Mono', monospace;
     font-size: 14px;
     outline: none;
     transition: 0.3s;
+    border-radius: 4px;
 }
 
-/* Làm sáng màu khi gõ */
 .field input:focus {
     border-color: var(--neon);
-    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
-    background: #1a1a1a;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
 }
 
 .btn-group {
     display: flex;
+    flex-direction: column; /* Xếp chồng nút để menu bé lại */
     gap: 10px;
     margin-top: 20px;
 }
 
 .btn {
-    flex: 1;
+    width: 100%;
     padding: 12px;
     cursor: pointer;
     border: 1px solid var(--neon);
     font-family: 'JetBrains Mono', monospace;
-    font-weight: 800;
-    text-transform: uppercase;
+    font-weight: 600;
     transition: 0.3s;
+    border-radius: 4px;
 }
 
 .btn-main {
@@ -103,9 +109,12 @@ body {
 .btn-sub {
     background: transparent;
     color: var(--neon);
+    font-size: 13px;
+    border: none;
+    text-decoration: underline;
 }
 
-.btn:hover {
+.btn-main:hover {
     box-shadow: 0 0 15px var(--neon);
     transform: translateY(-2px);
 }
