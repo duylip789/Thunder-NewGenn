@@ -1,72 +1,125 @@
 /* style.css */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+}
+
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.container {
+    position: relative;
+    z-index: 2;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
 }
 
-.container {
-    background-color: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    width: 350px;
+.login-box {
+    background: rgba(0, 0, 0, 0.85);
+    padding: 40px;
+    border: 2px solid #00ff41;
+    box-shadow: 0 0 20px #00ff41;
+    width: 400px;
+    text-align: center;
+    border-radius: 5px;
 }
 
 h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
+    color: #00ff41;
+    letter-spacing: 5px;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px #00ff41;
 }
 
-input {
+.input-group {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.input-group input {
     width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-sizing: border-box;
+    padding: 10px 0;
+    font-size: 16px;
+    color: #00ff41;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #00ff41;
     outline: none;
 }
 
-input:focus {
-    border-color: #1877f2;
+.input-group label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+    color: #00ff41;
+    pointer-events: none;
+    transition: 0.5s;
+    text-transform: uppercase;
+    font-size: 12px;
 }
 
-button {
-    width: 100%;
+.input-group input:focus ~ label,
+.input-group input:valid ~ label {
+    top: -20px;
+    font-size: 10px;
+    color: #00ff41;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn {
+    flex: 1;
     padding: 12px;
-    background-color: #1877f2;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    margin-top: 10px;
+    border: 1px solid #00ff41;
+    background: transparent;
+    color: #00ff41;
+    transition: 0.3s;
+    font-family: 'Courier New', Courier, monospace;
 }
 
-button:hover {
-    background-color: #166fe5;
+.btn-primary {
+    background: #00ff41;
+    color: #000;
 }
 
-.toggle-text {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 14px;
-    color: #606770;
+.btn:hover {
+    box-shadow: 0 0 15px #00ff41;
+    transform: scale(1.05);
 }
 
-.toggle-text span {
-    color: #1877f2;
-    cursor: pointer;
-    font-weight: bold;
+/* Hiệu ứng Glitch cho tiêu đề */
+.glitch {
+    position: relative;
 }
 
-#register-form {
-    display: none;
+.glitch::before {
+    content: attr(data-text);
+    position: absolute;
+    left: -2px;
+    text-shadow: 2px 0 red;
+    top: 0;
+    overflow: hidden;
+    clip: rect(0, 900px, 0, 0);
+    animation: noise-1 3s infinite linear alternate-reverse;
+}
+
+@keyframes noise-1 {
+    0% { clip: rect(20px, 9999px, 10px, 0); }
+    100% { clip: rect(40px, 9999px, 80px, 0); }
 }
