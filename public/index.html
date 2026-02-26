@@ -1,36 +1,40 @@
-<div class="wrapper">
-    <h1 class="ioe-title">IOE Native</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOE Native - AI Bot</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="wrapper">
+        <h1 class="ioe-title">IOE Native</h1>
 
-    <div class="login-card">
-        <div id="log-area">
-            <div class="field">
-                <i class="fa-solid fa-envelope"></i>
-                <input type="text" id="login-email" placeholder="Email address">
-            </div>
-            <div class="field">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" id="login-pass" placeholder="Password">
-            </div>
-            <div class="btn-group">
+        <div class="login-card">
+            <div id="log-area">
+                <div class="field">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="text" id="login-email" placeholder="Email address">
+                </div>
                 <button class="btn btn-main" onclick="doLogin()">Login</button>
-                <button class="btn btn-sub" onclick="swap()">Create an account</button>
             </div>
-        </div>
 
-        <div id="bot-area" style="display: none;">
-            <div class="field">
-                <i class="fa-solid fa-link"></i>
-                <input type="text" id="ioe-url" placeholder="Dán link bài thi IOE vào đây...">
-            </div>
-            <div class="btn-group">
+            <div id="bot-area" style="display:none; margin-top: 20px;">
+                <div class="field">
+                    <i class="fa-solid fa-link"></i>
+                    <input type="text" id="ioe-url" placeholder="Dán link vòng thi vào đây...">
+                </div>
                 <button class="btn btn-main" id="start-btn" onclick="startBot()">
-                    <i class="fa-solid fa-robot"></i> KÍCH HOẠT BOT
+                    <i class="fa-solid fa-robot"></i> KÍCH HOẠT AI
                 </button>
-            </div>
-            <div id="status-log" style="margin-top: 15px; font-size: 12px; color: #00ff00; font-family: 'JetBrains Mono';">
-                Chờ lệnh...
+                <div id="status-log"> > Chờ lệnh... </div>
             </div>
         </div>
-        
-        </div>
-</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
