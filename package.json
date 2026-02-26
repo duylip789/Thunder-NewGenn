@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "npm install && chmod a+x render-build.sh && ./render-build.sh"
+    "build": "PUPPETEER_CACHE_DIR=/opt/render/project/src/.cache/puppeteer npm install && chmod a+x render-build.sh && ./render-build.sh"
   },
   "dependencies": {
     "express": "^4.18.2",
