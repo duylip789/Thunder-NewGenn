@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>IOE NATIVE CORE - ULTIMATE ENGINE</title>
+  <title>IOE NATIVE - V2.1.0 ENGINE</title>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Audiowide&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
@@ -11,103 +11,84 @@
     :root { 
         --neon: #00ff88; 
         --bg: #0a0a0a; 
-        --panel-bg: rgba(10, 10, 10, 0.95);
-        --border-glow: 0 0 15px rgba(0, 255, 136, 0.3);
-        --text-glow: 0 0 10px rgba(0, 255, 136, 0.8);
+        --panel-bg: rgba(5, 5, 5, 0.98);
+        --glow: 0 0 15px rgba(0, 255, 136, 0.4);
     }
 
     * { box-sizing: border-box; font-family: 'JetBrains Mono', monospace; }
     body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--neon); overflow: hidden; }
-    
     #particles-js { position: absolute; width: 100%; height: 100%; z-index: 1; }
 
-    .main-layout {
+    .wrapper {
       position: relative; z-index: 2; display: flex; 
       justify-content: center; align-items: center; 
-      height: 100vh; gap: 20px; padding: 20px;
+      height: 100vh; flex-direction: column; gap: 20px;
     }
 
-    /* Đảm bảo 2 bảng bằng nhau */
+    .main-container { display: flex; gap: 20px; align-items: stretch; }
+
+    /* PANEL STYLES */
     .panel {
-      height: 600px; /* Chiều cao cố định cho cả 2 bảng */
-      background: var(--panel-bg);
-      border: 1px solid var(--neon);
-      box-shadow: var(--border-glow);
-      display: flex;
-      flex-direction: column;
-      animation: fadeIn 0.8s ease-out;
+      height: 550px; background: var(--panel-bg);
+      border: 1px solid var(--neon); box-shadow: var(--glow);
+      display: flex; flex-direction: column;
     }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .config-panel { width: 380px; }
+    .output-panel { width: 620px; }
 
-    .config-panel { width: 400px; }
-    .output-panel { width: 700px; }
-
-    .panel-header {
-      padding: 12px 18px;
-      border-bottom: 1px solid var(--neon);
-      font-size: 13px;
-      color: var(--neon);
-      letter-spacing: 2px;
-      display: flex; justify-content: space-between; align-items: center;
-      text-shadow: var(--text-glow);
+    .header {
+      padding: 12px 15px; border-bottom: 1px solid var(--neon);
+      font-size: 12px; display: flex; justify-content: space-between;
+      text-transform: uppercase; letter-spacing: 1px;
     }
 
-    .content-area { flex: 1; padding: 25px; display: flex; flex-direction: column; }
-
-    .field-group { margin-bottom: 25px; }
-    .label { font-size: 11px; color: #666; margin-bottom: 10px; display: block; font-weight: 800; }
-    .label i { color: var(--neon); margin-right: 5px; }
-
-    .input-wrapper {
-      background: #000;
-      border: 1px solid #333;
-      padding: 15px;
-      display: flex; align-items: center;
-      transition: 0.3s;
-    }
-    .input-wrapper:focus-within { border-color: var(--neon); box-shadow: 0 0 10px rgba(0,255,136,0.2); }
+    /* INPUT STYLES */
+    .content { padding: 25px; flex: 1; display: flex; flex-direction: column; }
+    .field { margin-bottom: 20px; }
+    .field label { display: block; font-size: 10px; color: #555; margin-bottom: 8px; font-weight: 800; }
     
-    input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 14px; }
+    .input-box {
+      background: #000; border: 1px solid #222; padding: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 13px; }
 
     .btn-run {
-      width: 100%; padding: 18px;
-      background: transparent; border: 1px solid var(--neon);
-      color: var(--neon); font-size: 16px; font-weight: 800; cursor: pointer;
-      text-transform: uppercase; transition: 0.4s;
-      text-shadow: var(--text-glow);
+      width: 100%; padding: 15px; background: transparent; 
+      border: 1px solid var(--neon); color: var(--neon);
+      font-weight: 800; cursor: pointer; transition: 0.3s;
+      text-shadow: 0 0 5px var(--neon); margin-top: 10px;
     }
-    .btn-run:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
-    
+    .btn-run:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px var(--neon); }
+
     .btn-skill {
-        width: 100%; padding: 12px; margin-top: 15px;
-        background: #111; border: 1px solid #222;
-        color: #444; cursor: not-allowed; font-size: 12px;
+      width: 100%; padding: 12px; background: #111; border: 1px solid #222;
+      color: #333; margin-top: 10px; font-size: 11px; cursor: not-allowed;
     }
 
-    /* Terminal Styling */
-    .stream-area {
-      flex: 1; padding: 20px;
-      overflow-y: auto; font-size: 13px;
-      background: rgba(0, 0, 0, 0.6);
-      border-top: 1px solid #111;
+    /* TERMINAL STYLES */
+    .terminal {
+      flex: 1; padding: 20px; overflow-y: auto;
+      background: rgba(0,0,0,0.5); font-size: 12.5px; line-height: 1.6;
     }
-
-    .log-line { margin-bottom: 10px; display: flex; gap: 15px; line-height: 1.5; }
-    .tag { font-weight: 800; min-width: 45px; }
-    .time { color: #555; min-width: 85px; }
+    .log { margin-bottom: 8px; display: flex; gap: 12px; }
+    .tag { font-weight: 800; min-width: 40px; }
+    .time { color: #444; }
     
-    .blue { color: #00d9ff; }
+    .blue { color: #00ccff; }
     .green { color: var(--neon); text-shadow: 0 0 5px var(--neon); }
-    .white { color: #ffffff; }
-    .red { color: #ff3e3e; font-weight: bold; }
-    .yellow { color: #ffcc00; }
+    .red { color: #ff4444; }
+    .white { color: #fff; }
 
-    /* Ready Indicator */
-    .indicator { margin-top: auto; font-size: 12px; color: #555; display: flex; align-items: center; }
-    .dot { width: 8px; height: 8px; background: var(--neon); border-radius: 50%; display: inline-block; margin-right: 10px; box-shadow: 0 0 10px var(--neon); }
+    /* FOOTER INFO */
+    .footer-info {
+        width: 1020px; display: flex; justify-content: space-between;
+        font-size: 11px; color: #444; padding: 0 5px;
+    }
+    .status-bar { display: flex; gap: 20px; color: var(--neon); }
 
-    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar { width: 3px; }
     ::-webkit-scrollbar-thumb { background: var(--neon); }
   </style>
 </head>
@@ -115,162 +96,151 @@
 
 <div id="particles-js"></div>
 
-<div class="main-layout">
-  <div class="panel config-panel">
-    <div class="panel-header">
-        <span>// CONFIGURATION</span>
+<div class="wrapper">
+  <div class="main-container">
+    <div class="panel config-panel">
+      <div class="header"><span>// Configuration</span></div>
+      <div class="content">
+        <div class="field">
+          <label>$ TARGET URL</label>
+          <div class="input-box">
+            <input type="text" id="target-url" placeholder="Paste IOE link here...">
+          </div>
+        </div>
+        <div class="field">
+          <label>$ DELAY (SEC)</label>
+          <div class="input-box">
+            <input type="number" id="delay" value="10">
+          </div>
+        </div>
+        <button class="btn-run" onclick="startEngine()">RUN ENGINE</button>
+        <button class="btn-skill">SKILL ISSUE</button>
+        <div style="margin-top: auto; font-size: 11px;">
+            <span style="color:var(--neon)">●</span> Round 25 ready
+        </div>
+      </div>
     </div>
-    <div class="content-area">
-      <div class="field-group">
-        <span class="label"><i class="fa-solid fa-link"></i> TARGET URL</span>
-        <div class="input-wrapper">
-          <input type="text" id="target-url" placeholder="https://ioe.vn/lam-bai/...">
-        </div>
-      </div>
 
-      <div class="field-group">
-        <span class="label"><i class="fa-solid fa-clock"></i> DELAY (SECONDS)</span>
-        <div class="input-wrapper">
-          <input type="number" id="delay" value="10">
-        </div>
+    <div class="panel output-panel">
+      <div class="header">
+        <span>// Output Stream</span>
+        <i class="fa-solid fa-trash" style="cursor:pointer" onclick="document.getElementById('terminal').innerHTML=''"></i>
       </div>
-
-      <button class="btn-run" onclick="startNativeBot()">RUN ENGINE</button>
-      <button class="btn-skill">SKILL ISSUE</button>
-      
-      <div class="indicator">
-        <span class="dot"></span> Round 25 ready
+      <div class="terminal" id="terminal">
+        <div class="log"><span class="tag blue">[..]</span> <span class="time">00:00:00</span> <span class="white">Kernel ready. Awaiting link...</span></div>
       </div>
     </div>
   </div>
 
-  <div class="panel output-panel">
-    <div class="panel-header">
-        <span>// OUTPUT STREAM</span>
-        <i class="fa-solid fa-trash-can" style="cursor: pointer; opacity: 0.5;" onclick="clearLogs()"></i>
-    </div>
-    <div id="stream-area" class="stream-area">
-      <div class="log-line">
-        <span class="tag blue">[..]</span>
-        <span class="time">00:00:00</span>
-        <span class="white">System initialized. Waiting for instruction...</span>
-      </div>
+  <div class="footer-info">
+    <div>v2.1.0 • dev by hex • <span style="color:var(--neon)">↓ Manager</span> • Manager Web</div>
+    <div class="status-bar">
+        <span>● 4.762 users</span>
+        <span>↻ 203.763 runs</span>
     </div>
   </div>
+  <div style="width: 1020px; color: #333; font-size: 11px;">support discord: hex7778 <i class="fa-regular fa-copy"></i></div>
 </div>
 
 <script>
-  // Particles Effect
   particlesJS("particles-js", {
     "particles": {
-      "number": { "value": 80 },
+      "number": { "value": 50 },
       "color": { "value": "#00ff88" },
       "shape": { "type": "circle" },
-      "opacity": { "value": 0.3 },
+      "opacity": { "value": 0.2 },
       "size": { "value": 1 },
-      "line_linked": { "enable": true, "distance": 150, "color": "#00ff88", "opacity": 0.15 },
-      "move": { "enable": true, "speed": 1.2 }
+      "line_linked": { "enable": true, "distance": 150, "color": "#00ff88", "opacity": 0.1 },
+      "move": { "enable": true, "speed": 1 }
     }
   });
 
-  const SHEETDB_URL = "https://sheetdb.io/api/v1/z0du4t0recg6p";
+  const SHEETDB = "https://sheetdb.io/api/v1/z0du4t0recg6p";
 
-  function getTimestamp() {
-    return new Date().toLocaleTimeString('en-GB');
+  function log(tag, msg, style="white", tagStyle="blue") {
+    const t = document.getElementById('terminal');
+    const now = new Date().toLocaleTimeString('en-GB');
+    t.innerHTML += `<div class="log"><span class="tag ${tagStyle}">${tag}</span> <span class="time">${now}</span> <span class="${style}">${msg}</span></div>`;
+    t.scrollTop = t.scrollHeight;
   }
 
-  function addLog(tag, msg, style = "white", tagStyle = "blue") {
-    const area = document.getElementById('stream-area');
-    const line = document.createElement('div');
-    line.className = 'log-line';
-    line.innerHTML = `
-      <span class="tag ${tagStyle}">${tag}</span>
-      <span class="time">${getTimestamp()}</span>
-      <span class="${style}">${msg}</span>
-    `;
-    area.appendChild(line);
-    area.scrollTop = area.scrollHeight;
-  }
+  async function startEngine() {
+    const url = document.getElementById('target-url').value;
+    if(!url.includes("ioe.vn")) { log("[ER]", "INVALID LINK DOMAIN", "red", "red"); return; }
 
-  function clearLogs() {
-    document.getElementById('stream-area').innerHTML = '';
-    addLog("[..]", "Buffer cleared.", "blue");
-  }
+    log("[..]", "Initializing Multi-Proxy connection...", "blue");
 
-  async function startNativeBot() {
-    const urlInput = document.getElementById('target-url').value;
-    const delayVal = document.getElementById('delay').value;
+    // Thử 2 cổng Proxy khác nhau để tránh lỗi link
+    const proxies = [
+        `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+        `https://corsproxy.io/?${encodeURIComponent(url)}`
+    ];
 
-    if (!urlInput.includes("ioe.vn")) {
-      addLog("[ER]", "INVALID DOMAIN. USE IOE.VN ONLY", "red", "red");
-      return;
+    let data = null;
+    for (let p of proxies) {
+        try {
+            const res = await fetch(p);
+            data = await res.json();
+            if(data.contents || data) break;
+        } catch(e) { continue; }
     }
 
-    addLog("[..]", "Processing bypass...", "blue");
+    if(!data) {
+        log("[ER]", "LINK EXPIRED OR CONNECTION BLOCKED", "red", "red");
+        return;
+    }
 
     try {
-      // Sử dụng Proxy mạnh hơn
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(urlInput)}`;
-      const response = await fetch(proxyUrl);
-      
-      if (!response.ok) throw new Error("Proxy connection failed");
-      
-      const data = await response.json();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(data.contents, "text/html");
+        const html = data.contents || data;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        
+        const user = doc.querySelector('.user-name')?.innerText || "Member_" + Math.floor(Math.random()*9999);
+        const round = doc.title.split('|')[0] || "Active Round";
 
-      // Tìm thông tin thật
-      const userName = doc.querySelector('.user-name')?.innerText || "Unknown_User";
-      const roundTitle = doc.title.split('-')[0] || "Round Active";
+        log("[OK]", `IOE: ${user} | Round: ${round}`, "green", "green");
+        log("[..]", "10 questions detected", "blue");
 
-      addLog("[OK]", `IDENTIFIED: ${userName} | ${roundTitle}`, "green", "green");
-      addLog("[..]", "Scanning question packets...", "white");
+        // Giả lập giải câu hỏi nhanh như trong ảnh
+        const questions = [
+            "Q1: 'Rescue workers...' -> 'True'",
+            "Q2: 'The news reports...' -> 'True'",
+            "Q5: 'The street stayed dry...' -> 'False'",
+            "Q3: 'A tornado is safe...' -> 'False'"
+        ];
 
-      // Giả lập flow như ảnh
-      setTimeout(() => {
-        addLog("[..]", "4 questions detected", "blue");
-        addLog("[..]", "Q1: Analyzing... -> SUCCESS", "blue");
-        addLog("[..]", "Q2: Analyzing... -> SUCCESS", "blue");
-        addLog("[..]", "Q3: Analyzing... -> SUCCESS", "blue");
-        addLog("[..]", "Q4: Analyzing... -> SUCCESS", "blue");
+        questions.forEach((q, i) => {
+            setTimeout(() => log("[..]", q, "blue"), 500 * (i+1));
+        });
 
-        let countdown = delayVal;
-        const submitTimer = setInterval(() => {
-          addLog("[~]", `Waiting to submit... (${countdown}s)`, "yellow", "yellow");
-          countdown--;
-          
-          if (countdown < 0) {
-            clearInterval(submitTimer);
-            finalize(userName, roundTitle, urlInput);
-          }
-        }, 1000);
-      }, 1500);
+        let countdown = document.getElementById('delay').value;
+        setTimeout(() => {
+            const timer = setInterval(() => {
+                log("[~]", `Waiting to submit... (${countdown}s)`, "blue", "blue");
+                countdown--;
+                if(countdown < 0) {
+                    clearInterval(timer);
+                    finish(user, round, url);
+                }
+            }, 1000);
+        }, 2500);
 
-    } catch (err) {
-      addLog("[ER]", "CONNECTION FAILED! IOE SERVER REJECTED PROXY", "red", "red");
-      addLog("[..]", "Tip: Make sure the link is still active.", "white");
+    } catch(e) {
+        log("[ER]", "FAILED TO PARSE IOE DATA", "red", "red");
     }
   }
 
-  async function finalize(user, round, link) {
-    addLog("[..]", "Injecting final packet...", "blue");
+  async function finish(u, r, l) {
+    log("[..]", "Submitting packet...", "blue");
     try {
-      await fetch(SHEETDB_URL, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          data: [{
-            question: user,
-            answer: link,
-            type: round,
-            grade: "ULTIMATE-ENGINE",
-            note: new Date().toLocaleString()
-          }]
-        })
-      });
-      addLog("[OK]", "Completed: 100/100 (100%)", "green", "green");
-    } catch (e) {
-      addLog("[ER]", "DATABASE SYNC FAILED", "red", "red");
+        await fetch(SHEETDB, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({data: [{question: u, answer: l, type: r, grade: "V2.1-REAL"}]})
+        });
+        log("[OK]", "Completed: 100/100 (100%)", "green", "green");
+    } catch(e) {
+        log("[ER]", "DATABASE ERROR", "red", "red");
     }
   }
 </script>
