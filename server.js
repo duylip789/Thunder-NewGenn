@@ -7,22 +7,21 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// API Key của bạn
 const genAI = new GoogleGenerativeAI("AIzaSyD-Npu4679JQ-aIhiv9IdRZjt69R7k6ydM");
 
 async function getAiAnswer(question, options) {
     try {
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-        const prompt = `You are an English teacher. 
-        Question: ${question}
-        Options: ${options.map((opt, i) => i + ": " + opt).join(", ")}
-        Task: Return ONLY the number (0, 1, 2, or 3) of the correct answer. No explanation.`;
+        const prompt = `Question: ${question}\nOptions: ${options.map((opt, i) => i + ": " + opt).join(", ")}\nReturn only the index number of correct answer.`;
+        
         const result = await model.generateContent(prompt);
         const text = result.response.text().trim();
         const match = text.match(/\d/);
         return match ? parseInt(match[0]) : 0;
     } catch (e) {
-        console.log("Lỗi AI:", e.message);
-        return 0;
+        console.log("⚠️ Lỗi AI (Có thể do vùng địa lý hoặc Key):", e.message);
+        return 0; // Trả về đáp án đầu tiên nếu AI lỗi để tránh sập server
     }
 }
 
@@ -32,51 +31,69 @@ app.post('/run-bot', async (req, res) => {
 
     let browser;
     try {
-        console.log(`[SYS] Đang tìm kiếm trình duyệt...`);
-        
+        console.log(`[1/4] Đang mở trình duyệt...`);
         browser = await puppeteer.launch({
-            // ĐỂ TRỐNG executablePath để Puppeteer tự dùng bản nó đã tải về trong thư mục .cache
+            // Sửa đường dẫn executablePath tự động để tránh lỗi 500
+            executablePath: puppeteer.executablePath(),
             args: [
                 '--no-sandbox', 
                 '--disable-setuid-sandbox', 
                 '--disable-dev-shm-usage',
-                '--single-process',
-                '--no-zygote'
+                '--disable-gpu',
+                '--no-first-run',
+                '--no-zygote',
+                '--single-process'
             ],
             headless: "new"
         });
 
         const page = await browser.newPage();
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36');
-        
-        console.log(`[SYS] Đang truy cập IOE...`);
-        await page.goto(url, { waitUntil: 'networkidle2', timeout: 90000 });
-
-        const quizData = await page.evaluate(() => {
-            const items = document.querySelectorAll('.question-item, .content-question, .item-question'); 
-            return Array.from(items).map(el => ({
-                question: el.querySelector('.question-content, .title-question, .content-question')?.innerText.trim(),
-                options: Array.from(el.querySelectorAll('.answer-item, .option-item, .ans-item')).map(opt => opt.innerText.trim())
-            }));
+        // Giới hạn tài nguyên để không bị Render kill (Tắt tải ảnh cho nhẹ)
+        await page.setRequestInterception(true);
+        page.on('request', (req) => {
+            if (['image', 'font', 'media'].includes(req.resourceType())) req.abort();
+            else req.continue();
         });
 
-        for (const item of quizData) {
-            if (item.question && item.options.length > 0) {
-                const bestIdx = await getAiAnswer(item.question, item.options);
-                await page.evaluate((idx) => {
-                    const buttons = document.querySelectorAll('.answer-item, .option-item, .ans-item');
-                    if(buttons[idx]) buttons[idx].click();
-                }, bestIdx);
-                await new Promise(r => setTimeout(r, 1500)); 
-            }
+        console.log(`[2/4] Đang truy cập IOE: ${url}`);
+        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+
+        console.log(`[3/4] Đang quét câu hỏi...`);
+        const quizData = await page.evaluate(() => {
+            const items = document.querySelectorAll('.question-item, .content-question, .item-question, .box-cau-hoi'); 
+            return Array.from(items).map(el => ({
+                question: el.innerText.split('\n')[0], // Lấy dòng đầu tiên làm câu hỏi
+                options: Array.from(el.querySelectorAll('.answer-item, .option-item, .ans-item, button')).map(opt => opt.innerText.trim())
+            })).filter(q => q.options.length > 0);
+        });
+
+        console.log(`[BOT] Tìm thấy ${quizData.length} câu hỏi.`);
+
+        if (quizData.length === 0) {
+            throw new Error("Không tìm thấy câu hỏi nào. Có thể sai Link hoặc sai Class HTML.");
         }
 
+        for (let i = 0; i < quizData.length; i++) {
+            const item = quizData[i];
+            const bestIdx = await getAiAnswer(item.question, item.options);
+            console.log(`[AI] Câu ${i+1}: Chọn ${bestIdx}`);
+
+            await page.evaluate((idx) => {
+                const buttons = document.querySelectorAll('.answer-item, .option-item, .ans-item, button');
+                if(buttons[idx]) buttons[idx].click();
+            }, bestIdx);
+            
+            await new Promise(r => setTimeout(r, 1000)); 
+        }
+
+        console.log(`[4/4] Hoàn thành!`);
         await browser.close();
         res.json({ success: true, message: "Bot đã làm xong!" });
 
     } catch (error) {
-        console.error("[ERR]", error.message);
+        console.error("❌ LỖI RỒI:", error.message);
         if (browser) await browser.close();
+        // Trả về lỗi cụ thể để Client biết
         res.status(500).json({ success: false, error: error.message });
     }
 });
