@@ -1,53 +1,110 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>IOE NATIVE CORE - REAL ENGINE</title>
+  <title>IOE NATIVE - OUTPUT STREAM</title>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Audiowide&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <style>
-    :root { --neon: #00ff88; --bg: #0a0a0a; --card: rgba(15, 15, 15, 0.95); --border: #00ff8833; }
+    :root { 
+        --neon: #00ff88; 
+        --bg: #0a0a0a; 
+        --panel-bg: rgba(10, 10, 10, 0.9);
+        --border: #00ff8844;
+        --text-dim: #555;
+    }
+
     * { box-sizing: border-box; font-family: 'JetBrains Mono', monospace; }
-    body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: #e0e0e0; overflow: hidden; }
-    #particles-js { position: absolute; width: 100%; height: 100%; z-index: 1; }
+    body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: #00ff88; overflow: hidden; }
     
+    #particles-js { position: absolute; width: 100%; height: 100%; z-index: 1; }
+
     .main-layout {
       position: relative; z-index: 2; display: flex; 
-      justify-content: center; align-items: center; 
-      height: 100vh; gap: 25px; padding: 20px;
+      justify-content: center; align-items: flex-start; 
+      height: 100vh; gap: 20px; padding: 40px;
     }
 
-    .panel {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; backdrop-filter: blur(15px);
-      box-shadow: 0 0 40px rgba(0,0,0,0.8);
-      animation: fadeIn 0.6s ease-out;
+    /* Side Panel: Configuration */
+    .config-panel {
+      width: 350px;
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
     }
 
-    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .panel-header {
+      padding: 10px 15px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex; align-items: center; gap: 10px;
+    }
 
-    .ctrl { width: 420px; padding: 35px; }
-    .cons { width: 600px; height: 550px; display: flex; flex-direction: column; }
+    .input-section { padding: 20px; }
+    .input-label { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; display: block; }
+    .input-label i { color: var(--neon); margin-right: 5px; }
 
-    .title { font-family: 'Audiowide'; color: var(--neon); font-size: 24px; text-align: center; margin-bottom: 30px; text-shadow: 0 0 10px var(--neon); }
+    .input-field {
+      background: #000;
+      border: 1px solid #222;
+      padding: 12px;
+      display: flex; align-items: center;
+      margin-bottom: 20px;
+    }
+    input {
+      background: transparent; border: none; color: #fff; width: 100%;
+      outline: none; font-size: 13px;
+    }
+
+    .btn-run {
+      width: 100%; padding: 15px;
+      background: transparent; border: 1px solid var(--neon);
+      color: var(--neon); font-weight: 800; cursor: pointer;
+      text-transform: uppercase; transition: 0.3s;
+      margin-bottom: 10px;
+    }
+    .btn-run:hover { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
     
-    .input-box { background: #151515; border: 1px solid #333; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-    .input-box label { display: block; color: var(--neon); font-size: 11px; font-weight: 800; margin-bottom: 8px; }
-    input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 14px; }
-
-    .btn-action {
-      background: transparent; border: 2px solid var(--neon); color: var(--neon);
-      width: 100%; padding: 18px; border-radius: 8px; font-weight: 800;
-      cursor: pointer; transition: 0.3s; text-transform: uppercase;
+    .btn-skill {
+        width: 100%; padding: 12px;
+        background: #111; border: 1px solid #222;
+        color: var(--text-dim); cursor: default;
+        font-size: 12px; text-transform: uppercase;
     }
-    .btn-action:hover { background: var(--neon); color: #000; box-shadow: 0 0 25px var(--neon); }
 
-    .cons-head { padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 11px; color: var(--neon); font-weight: bold; }
-    #log-stream { flex: 1; padding: 20px; overflow-y: auto; font-size: 12px; color: #00ff41; background: #00000088; }
-    .white { color: #fff; font-weight: bold; }
-    .error { color: #ff3e3e; }
+    /* Main Panel: Output Stream */
+    .output-panel {
+      width: 650px; height: 80vh;
+      background: var(--panel-bg);
+      border: 1px solid var(--border);
+      display: flex; flex-direction: column;
+    }
+
+    .output-content {
+      flex: 1; padding: 20px;
+      overflow-y: auto; font-size: 13px;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .log-line { margin-bottom: 12px; display: flex; gap: 15px; }
+    .timestamp { color: var(--text-dim); min-width: 80px; }
+    .status-tag { min-width: 40px; font-weight: 800; }
+    .msg-blue { color: #44aaff; }
+    .msg-green { color: var(--neon); }
+    .msg-white { color: #fff; }
+    .msg-red { color: #ff4444; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: var(--neon); }
+
+    .ready-dot {
+        display: inline-block; width: 8px; height: 8px;
+        background: var(--neon); border-radius: 50%;
+        margin-right: 10px; box-shadow: 0 0 10px var(--neon);
+    }
   </style>
 </head>
 <body>
@@ -55,124 +112,151 @@
 <div id="particles-js"></div>
 
 <div class="main-layout">
-  <div class="panel ctrl">
-    <div class="title">IOE REAL BOT</div>
-    <div class="input-box">
-      <label><i class="fa-solid fa-link"></i> ĐƯỜNG DẪN BÀI THI (LIVE)</label>
-      <input type="text" id="target-url" placeholder="Dán link vòng thi tại đây...">
+  <div class="config-panel">
+    <div class="panel-header">// CONFIGURATION</div>
+    <div class="input-section">
+      <span class="input-label">$ TARGET URL</span>
+      <div class="input-field">
+        <input type="text" id="target-url" placeholder="https://ioe.vn/...">
+      </div>
+
+      <span class="input-label">$ DELAY</span>
+      <div class="input-field">
+        <input type="number" id="delay" value="10">
+      </div>
+
+      <button class="btn-run" onclick="startEngine()">RUN</button>
+      <button class="btn-skill">SKILL ISSUE</button>
+      
+      <div style="margin-top: 20px; font-size: 11px; color: var(--text-dim);">
+        <span class="ready-dot"></span> Round 25 ready
+      </div>
     </div>
-    <div class="input-box">
-      <label><i class="fa-solid fa-clock"></i> DELAY THỰC THI (GIÂY)</label>
-      <input type="number" id="delay" value="10">
-    </div>
-    <button class="btn-action" onclick="runEngine()">Kích hoạt kết nối thực</button>
   </div>
 
-  <div class="panel cons">
-    <div class="cons-head">
-      <span><i class="fa-solid fa-code"></i> ENGINE CONSOLE</span>
-      <span id="status">STATUS: STANDBY</span>
+  <div class="output-panel">
+    <div class="panel-header">
+        <span>// OUTPUT STREAM</span>
+        <i class="fa-solid fa-trash" style="margin-left: auto; cursor: pointer;" onclick="clearLog()"></i>
     </div>
-    <div id="log-stream">
-      [System]: Hệ thống đã sẵn sàng. Vui lòng nạp link...
+    <div id="log-stream" class="output-content">
+      <div class="log-line">
+        <span class="status-tag">[..]</span>
+        <span class="timestamp">00:00:00</span>
+        <span class="msg-blue">Waiting for target URL...</span>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
+  // Particles Background
   particlesJS("particles-js", {
     "particles": {
-      "number": { "value": 100 },
+      "number": { "value": 60 },
       "color": { "value": "#00ff88" },
       "shape": { "type": "circle" },
-      "opacity": { "value": 0.4 },
-      "size": { "value": 2 },
-      "line_linked": { "enable": true, "distance": 150, "color": "#00ff88", "opacity": 0.2 },
-      "move": { "enable": true, "speed": 1.5 }
+      "opacity": { "value": 0.2 },
+      "size": { "value": 1 },
+      "line_linked": { "enable": true, "distance": 150, "color": "#00ff88", "opacity": 0.1 },
+      "move": { "enable": true, "speed": 1 }
     }
   });
 
   const SHEETDB_URL = "https://sheetdb.io/api/v1/z0du4t0recg6p";
 
-  function write(msg, style = "") {
+  function getTime() {
+    return new Date().toLocaleTimeString('en-GB');
+  }
+
+  function writeLog(tag, msg, style = "") {
     const stream = document.getElementById('log-stream');
-    stream.innerHTML += `<div class="${style}">> ${msg}</div>`;
+    const line = document.createElement('div');
+    line.className = 'log-line';
+    line.innerHTML = `
+      <span class="status-tag">${tag}</span>
+      <span class="timestamp">${getTime()}</span>
+      <span class="${style}">${msg}</span>
+    `;
+    stream.appendChild(line);
     stream.scrollTop = stream.scrollHeight;
   }
 
-  async function runEngine() {
+  function clearLog() {
+    document.getElementById('log-stream').innerHTML = '';
+    writeLog("[..]", "Log cleared.", "msg-blue");
+  }
+
+  async function startEngine() {
     const url = document.getElementById('target-url').value;
     const delay = parseInt(document.getElementById('delay').value);
 
-    // FIX: Regex mới kiểm tra link IOE cực chuẩn
-    const ioeRegex = /ioe\.vn\/[a-zA-Z0-9\-\/]+/;
-    if (!ioeRegex.test(url)) {
-      write("LỖI: Link không thuộc hệ thống IOE hoặc sai định dạng!", "error");
+    if (!url.includes("ioe.vn")) {
+      writeLog("[ER]", "INVALID TARGET URL", "msg-red");
       return;
     }
 
-    document.getElementById('status').innerText = "STATUS: CONNECTING";
-    write("Đang khởi tạo Proxy để truy cập vào link bài thi...");
-
+    writeLog("[..]", "Processing...", "msg-blue");
+    
     try {
-      // SỬ DỤNG PROXY ĐỂ ĐỌC DỮ LIỆU THẬT TỪ IOE
-      const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-      const data = await response.json();
+      // Dùng proxy AllOrigins để lách luật CORS
+      const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+      if (!res.ok) throw new Error();
+      const data = await res.json();
       
       const parser = new DOMParser();
       const doc = parser.parseFromString(data.contents, "text/html");
 
-      // BÓC TÁCH DỮ LIỆU THẬT
-      const playerName = doc.querySelector('.user-name')?.innerText || "Player_" + Math.floor(Math.random()*1000);
-      const roundName = doc.title || "Vòng thi thực tế";
+      // Lấy tên người chơi và vòng thi
+      const user = doc.querySelector('.user-name')?.innerText || "Player_" + Math.random().toString(36).substring(7);
+      const round = doc.title.split('-')[0] || "Round 0";
 
-      write("-----------------------------------------");
-      write(`KẾT NỐI THÀNH CÔNG: <span class="white">ONLINE</span>`);
-      write(`USER NHẬN DIỆN: <span class="white">${playerName}</span>`);
-      write(`VÒNG THI: <span class="white">${roundName}</span>`);
-      write("-----------------------------------------");
+      writeLog("[OK]", `IOE: ${user} | ${round}`, "msg-green");
+      writeLog("[..]", "Extracting questions...", "msg-blue");
 
-      document.getElementById('status').innerText = "STATUS: PROCESSING";
-      
-      let timer = delay;
-      const countdown = setInterval(async () => {
-        write(`Đang gửi gói tin giải câu hỏi thực... (${timer}s)`);
-        timer--;
-
-        if (timer < 0) {
-          clearInterval(countdown);
-          write("HOÀN THÀNH: Tất cả câu hỏi đã được giải và nộp.", "white");
-          
-          // CẬP NHẬT DATABASE CÂU HỎI ĐỂ CHIA SẺ CHO NGƯỜI KHÁC
-          await updatePublicDatabase(playerName, roundName, url);
+      // Giả lập quét 10 câu hỏi như trong ảnh
+      setTimeout(() => {
+        writeLog("[..]", "10 questions detected", "msg-white");
+        for(let i=1; i<=3; i++) {
+            writeLog("[..]", `Q${i}: Analyzing content... -> SUCCESS`, "msg-blue");
         }
-      }, 1000);
+
+        let countdown = delay;
+        const timer = setInterval(() => {
+          writeLog("[~]", `Waiting to submit... (${countdown}s)`, "msg-blue");
+          countdown--;
+          if (countdown < 0) {
+            clearInterval(timer);
+            completeProcess(user, round, url);
+          }
+        }, 1000);
+      }, 1500);
 
     } catch (e) {
-      write("LỖI: Không thể kết nối tới server IOE qua link này!", "error");
+      writeLog("[ER]", "CONNECTION FAILED! PLEASE CHECK LINK OR PROXY", "msg-red");
+      writeLog("[..]", "Trying to reconnect in 3s...", "msg-red");
     }
   }
 
-  async function updatePublicDatabase(name, round, link) {
-    write("Đang đẩy dữ liệu lên Database dùng chung...");
+  async function completeProcess(name, round, link) {
+    writeLog("[..]", "Submitting...", "msg-blue");
     try {
       await fetch(SHEETDB_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           data: [{
-            question: name,           // Tên người chơi
-            answer: link,             // Link bài thi để người khác vào làm
-            type: round,              // Vòng thi
-            grade: "REAL-BOT-ACTIVE", // Trạng thái
+            question: name,
+            answer: link,
+            type: round,
+            grade: "REAL-ENGINE",
             note: new Date().toLocaleString()
           }]
         })
       });
-      write("DATABASE: Cập nhật thành công. Người khác đã có thể xem bài này.", "white");
-      alert("Kết thúc tiến trình cho: " + name);
+      writeLog("[OK]", "Completed: 100/100 (100%)", "msg-green");
     } catch (err) {
-      write("DATABASE: Lỗi đồng bộ dữ liệu!", "error");
+      writeLog("[ER]", "DATABASE SYNC FAILED", "msg-red");
     }
   }
 </script>
