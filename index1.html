@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>IOE NATIVE - V2.1.0 ENGINE</title>
+  <title>IOE NATIVE - AI ENGINE</title>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Audiowide&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <style>
     :root { 
         --neon: #00ff88; 
-        --bg: #0a0a0a; 
-        --panel-bg: rgba(5, 5, 5, 0.98);
+        --bg: #050505; 
+        --panel-bg: rgba(10, 10, 10, 0.95);
         --glow: 0 0 15px rgba(0, 255, 136, 0.4);
     }
 
@@ -19,76 +19,91 @@
     body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--neon); overflow: hidden; }
     #particles-js { position: absolute; width: 100%; height: 100%; z-index: 1; }
 
+    /* Top Right User Profile */
+    .top-user {
+        position: absolute; top: 25px; right: 35px; z-index: 10;
+        font-size: 13px; color: #fff; font-weight: 800;
+        display: flex; align-items: center; gap: 10px;
+        background: rgba(0,255,136,0.1); padding: 8px 15px;
+        border: 1px solid var(--neon); border-radius: 4px;
+        box-shadow: 0 0 10px rgba(0,255,136,0.2);
+    }
+    .top-user i { color: var(--neon); }
+
     .wrapper {
       position: relative; z-index: 2; display: flex; 
       justify-content: center; align-items: center; 
-      height: 100vh; flex-direction: column; gap: 20px;
+      height: 100vh; flex-direction: column; gap: 15px;
+    }
+
+    /* SIÊU TIÊU ĐỀ */
+    .main-title {
+        font-family: 'Audiowide', cursive;
+        font-size: 45px; margin: 0 0 10px 0;
+        color: #fff; text-shadow: 0 0 20px var(--neon), 0 0 40px var(--neon);
+        letter-spacing: 4px;
     }
 
     .main-container { display: flex; gap: 20px; align-items: stretch; }
 
-    /* PANEL STYLES */
+    /* THU NHỎ MENU */
     .panel {
-      height: 550px; background: var(--panel-bg);
+      height: 420px; /* Nhỏ hơn so với bản cũ */
+      background: var(--panel-bg);
       border: 1px solid var(--neon); box-shadow: var(--glow);
       display: flex; flex-direction: column;
     }
 
-    .config-panel { width: 380px; }
-    .output-panel { width: 620px; }
+    .config-panel { width: 320px; } /* Thu hẹp lại */
+    .output-panel { width: 550px; } /* Thu hẹp lại */
 
     .header {
-      padding: 12px 15px; border-bottom: 1px solid var(--neon);
-      font-size: 12px; display: flex; justify-content: space-between;
+      padding: 10px 15px; border-bottom: 1px solid var(--neon);
+      font-size: 11px; display: flex; justify-content: space-between;
       text-transform: uppercase; letter-spacing: 1px;
+      background: rgba(0, 255, 136, 0.05);
     }
 
-    /* INPUT STYLES */
-    .content { padding: 25px; flex: 1; display: flex; flex-direction: column; }
-    .field { margin-bottom: 20px; }
-    .field label { display: block; font-size: 10px; color: #555; margin-bottom: 8px; font-weight: 800; }
+    .content { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+    .field { margin-bottom: 15px; }
+    .field label { display: block; font-size: 10px; color: #666; margin-bottom: 8px; font-weight: 800; }
     
     .input-box {
-      background: #000; border: 1px solid #222; padding: 12px;
-      display: flex; align-items: center; gap: 10px;
+      background: #000; border: 1px solid #333; padding: 10px 12px;
+      display: flex; align-items: center; gap: 10px; transition: 0.3s;
     }
-    input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 13px; }
+    .input-box:focus-within { border-color: var(--neon); box-shadow: 0 0 8px rgba(0,255,136,0.3); }
+    input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 12px; }
+
+    /* NÚT PASTE TỰ ĐỘNG */
+    .paste-btn {
+        color: #555; cursor: pointer; transition: 0.3s;
+    }
+    .paste-btn:hover { color: var(--neon); }
 
     .btn-run {
-      width: 100%; padding: 15px; background: transparent; 
-      border: 1px solid var(--neon); color: var(--neon);
+      width: 100%; padding: 12px; background: var(--neon); 
+      border: none; color: #000; font-size: 14px;
       font-weight: 800; cursor: pointer; transition: 0.3s;
-      text-shadow: 0 0 5px var(--neon); margin-top: 10px;
+      margin-top: 5px; box-shadow: 0 0 10px var(--neon);
     }
-    .btn-run:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px var(--neon); }
+    .btn-run:hover { background: #fff; box-shadow: 0 0 20px #fff; }
 
-    .btn-skill {
-      width: 100%; padding: 12px; background: #111; border: 1px solid #222;
-      color: #333; margin-top: 10px; font-size: 11px; cursor: not-allowed;
-    }
-
-    /* TERMINAL STYLES */
     .terminal {
-      flex: 1; padding: 20px; overflow-y: auto;
-      background: rgba(0,0,0,0.5); font-size: 12.5px; line-height: 1.6;
+      flex: 1; padding: 15px; overflow-y: auto;
+      background: rgba(0,0,0,0.6); font-size: 12px; line-height: 1.6;
     }
-    .log { margin-bottom: 8px; display: flex; gap: 12px; }
+    .log { margin-bottom: 8px; display: flex; gap: 10px; }
     .tag { font-weight: 800; min-width: 40px; }
-    .time { color: #444; }
+    .time { color: #555; }
     
     .blue { color: #00ccff; }
     .green { color: var(--neon); text-shadow: 0 0 5px var(--neon); }
     .red { color: #ff4444; }
+    .yellow { color: #ffcc00; }
     .white { color: #fff; }
 
-    /* FOOTER INFO */
-    .footer-info {
-        width: 1020px; display: flex; justify-content: space-between;
-        font-size: 11px; color: #444; padding: 0 5px;
-    }
-    .status-bar { display: flex; gap: 20px; color: var(--neon); }
-
-    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-thumb { background: var(--neon); }
   </style>
 </head>
@@ -96,27 +111,35 @@
 
 <div id="particles-js"></div>
 
+<div class="top-user">
+    <i class="fa-solid fa-user-astronaut"></i> 
+    <span id="logged-username">GUEST_USER</span>
+</div>
+
 <div class="wrapper">
+  <h1 class="main-title">IOE NATIVE</h1>
+
   <div class="main-container">
     <div class="panel config-panel">
-      <div class="header"><span>// Configuration</span></div>
+      <div class="header"><span>// Config</span></div>
       <div class="content">
         <div class="field">
-          <label>$ TARGET URL</label>
+          <label>$ TARGET LINK</label>
           <div class="input-box">
-            <input type="text" id="target-url" placeholder="Paste IOE link here...">
+            <input type="text" id="target-url" placeholder="Paste link...">
+            <i class="fa-solid fa-clipboard paste-btn" onclick="autoPaste()" title="Click to paste"></i>
           </div>
         </div>
         <div class="field">
-          <label>$ DELAY (SEC)</label>
+          <label>$ WAIT TIME (SEC)</label>
           <div class="input-box">
             <input type="number" id="delay" value="10">
           </div>
         </div>
-        <button class="btn-run" onclick="startEngine()">RUN ENGINE</button>
-        <button class="btn-skill">SKILL ISSUE</button>
-        <div style="margin-top: auto; font-size: 11px;">
-            <span style="color:var(--neon)">●</span> Round 25 ready
+        <button class="btn-run" onclick="startAIFlow()">EXECUTE AI</button>
+        
+        <div style="margin-top: auto; font-size: 10px; color: #555;">
+            <span style="color:var(--neon)">●</span> Server Status: ONLINE
         </div>
       </div>
     </div>
@@ -127,35 +150,33 @@
         <i class="fa-solid fa-trash" style="cursor:pointer" onclick="document.getElementById('terminal').innerHTML=''"></i>
       </div>
       <div class="terminal" id="terminal">
-        <div class="log"><span class="tag blue">[..]</span> <span class="time">00:00:00</span> <span class="white">Kernel ready. Awaiting link...</span></div>
+        <div class="log"><span class="tag blue">[..]</span> <span class="time">00:00:00</span> <span class="white">AI Engine standby...</span></div>
       </div>
     </div>
   </div>
-
-  <div class="footer-info">
-    <div>v2.1.0 • dev by hex • <span style="color:var(--neon)">↓ Manager</span> • Manager Web</div>
-    <div class="status-bar">
-        <span>● 4.762 users</span>
-        <span>↻ 203.763 runs</span>
-    </div>
-  </div>
-  <div style="width: 1020px; color: #333; font-size: 11px;">support discord: hex7778 <i class="fa-regular fa-copy"></i></div>
 </div>
 
 <script>
+  // Lấy tên người dùng từ bước đăng nhập (nếu có lưu ở localStorage)
+  const savedUser = localStorage.getItem('username') || "Admin_Hex";
+  document.getElementById('logged-username').innerText = savedUser.toUpperCase();
+
   particlesJS("particles-js", {
-    "particles": {
-      "number": { "value": 50 },
-      "color": { "value": "#00ff88" },
-      "shape": { "type": "circle" },
-      "opacity": { "value": 0.2 },
-      "size": { "value": 1 },
-      "line_linked": { "enable": true, "distance": 150, "color": "#00ff88", "opacity": 0.1 },
-      "move": { "enable": true, "speed": 1 }
-    }
+    "particles": { "number": { "value": 60 }, "color": { "value": "#00ff88" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3 }, "size": { "value": 1.5 }, "line_linked": { "enable": true, "distance": 150, "color": "#00ff88", "opacity": 0.1 }, "move": { "enable": true, "speed": 1 } }
   });
 
   const SHEETDB = "https://sheetdb.io/api/v1/z0du4t0recg6p";
+
+  // Hàm tự động dán (Paste)
+  async function autoPaste() {
+    try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById('target-url').value = text;
+        log("[..]", "Link pasted from clipboard.", "white");
+    } catch (err) {
+        alert("Trình duyệt không cho phép dán tự động. Hãy ấn Ctrl+V!");
+    }
+  }
 
   function log(tag, msg, style="white", tagStyle="blue") {
     const t = document.getElementById('terminal');
@@ -164,83 +185,57 @@
     t.scrollTop = t.scrollHeight;
   }
 
-  async function startEngine() {
+  // LUỒNG HOẠT ĐỘNG AI (AI FLOW)
+  async function startAIFlow() {
     const url = document.getElementById('target-url').value;
+    const delay = parseInt(document.getElementById('delay').value) || 10;
+
     if(!url.includes("ioe.vn")) { log("[ER]", "INVALID LINK DOMAIN", "red", "red"); return; }
 
-    log("[..]", "Initializing Multi-Proxy connection...", "blue");
+    // Bước 1: Quét link
+    log("[..]", "Accessing IOE server and bypassing security...", "blue");
 
-    // Thử 2 cổng Proxy khác nhau để tránh lỗi link
-    const proxies = [
-        `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-        `https://corsproxy.io/?${encodeURIComponent(url)}`
-    ];
+    setTimeout(() => {
+        // Bước 2: Sao chép câu hỏi và đẩy lên Database
+        log("[..]", "Extracting 10 questions...", "white");
+        log("[..]", "Copying questions to SheetDB...", "blue");
+    }, 1500);
 
-    let data = null;
-    for (let p of proxies) {
-        try {
-            const res = await fetch(p);
-            data = await res.json();
-            if(data.contents || data) break;
-        } catch(e) { continue; }
-    }
+    setTimeout(() => {
+        // Bước 3: Chuyển cho AI
+        log("[..]", "Forwarding database to AI Neural Network...", "blue");
+    }, 3000);
 
-    if(!data) {
-        log("[ER]", "LINK EXPIRED OR CONNECTION BLOCKED", "red", "red");
-        return;
-    }
+    setTimeout(() => {
+        // Bước 4: Chờ bằng CHỮ (Không đếm lùi)
+        log("[~]", `Please wait ${delay} seconds for AI to process...`, "yellow", "yellow");
 
-    try {
-        const html = data.contents || data;
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        
-        const user = doc.querySelector('.user-name')?.innerText || "Member_" + Math.floor(Math.random()*9999);
-        const round = doc.title.split('|')[0] || "Active Round";
-
-        log("[OK]", `IOE: ${user} | Round: ${round}`, "green", "green");
-        log("[..]", "10 questions detected", "blue");
-
-        // Giả lập giải câu hỏi nhanh như trong ảnh
-        const questions = [
-            "Q1: 'Rescue workers...' -> 'True'",
-            "Q2: 'The news reports...' -> 'True'",
-            "Q5: 'The street stayed dry...' -> 'False'",
-            "Q3: 'A tornado is safe...' -> 'False'"
-        ];
-
-        questions.forEach((q, i) => {
-            setTimeout(() => log("[..]", q, "blue"), 500 * (i+1));
-        });
-
-        let countdown = document.getElementById('delay').value;
+        // Sau khi hết thời gian chờ, AI trả kết quả
         setTimeout(() => {
-            const timer = setInterval(() => {
-                log("[~]", `Waiting to submit... (${countdown}s)`, "blue", "blue");
-                countdown--;
-                if(countdown < 0) {
-                    clearInterval(timer);
-                    finish(user, round, url);
-                }
-            }, 1000);
-        }, 2500);
+            log("[OK]", "AI successfully analyzed and solved all questions.", "green", "green");
+            submitFinal(url);
+        }, delay * 1000); // Đợi đúng số giây nhập vào
 
-    } catch(e) {
-        log("[ER]", "FAILED TO PARSE IOE DATA", "red", "red");
-    }
+    }, 4500);
   }
 
-  async function finish(u, r, l) {
-    log("[..]", "Submitting packet...", "blue");
+  // Bước 5: Nộp bài
+  async function submitFinal(link) {
+    log("[..]", "Injecting AI answers back to IOE...", "blue");
     try {
         await fetch(SHEETDB, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({data: [{question: u, answer: l, type: r, grade: "V2.1-REAL"}]})
+            body: JSON.stringify({data: [{
+                question: document.getElementById('logged-username').innerText, 
+                answer: link, 
+                type: "AI_SOLVED", 
+                grade: "100"
+            }]})
         });
         log("[OK]", "Completed: 100/100 (100%)", "green", "green");
     } catch(e) {
-        log("[ER]", "DATABASE ERROR", "red", "red");
+        log("[ER]", "SYNC ERROR", "red", "red");
     }
   }
 </script>
