@@ -1,72 +1,77 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
 const path = require('path');
+const { GoogleGenerativeAI } = require("@google/generative-ai"); // Thư viện AI của Google
+
 const app = express();
-
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-// 1. Cấu hình đường dẫn tuyệt đối cho thư mục public
-// Dùng path.resolve giúp tránh lỗi ENOENT trên các server Linux như Render
-const publicPath = path.resolve(__dirname, 'public');
+// CẤU HÌNH AI VỚI KEY CỦA BẠN
+const genAI = new GoogleGenerativeAI("AIzaSyD-Npu4679JQ-aIhiv9IdRZjt69R7k6ydM");
 
-// Phục vụ các file tĩnh (css, js, images) trong folder public
-app.use(express.static(publicPath));
+async function getAiAnswer(question, options) {
+    try {
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const prompt = `You are an English teacher. 
+        Question: ${question}
+        Options: ${options.map((opt, i) => i + ": " + opt).join(", ")}
+        Task: Return ONLY the number (0, 1, 2, or 3) of the correct answer. No explanation.`;
 
-// 2. Định nghĩa Route chính xác
-// TRANG CHỦ (Giao diện Login/Menu)
-app.get('/', (req, res) => {
-    res.sendFile(path.join(publicPath, 'index.html'));
-});
+        const result = await model.generateContent(prompt);
+        const text = result.response.text().trim();
+        const match = text.match(/\d/);
+        return match ? parseInt(match[0]) : 0;
+    } catch (e) {
+        console.log("Lỗi AI:", e.message);
+        return 0;
+    }
+}
 
-// TRANG ĐIỀU KHIỂN (Giao diện Tool Bot)
-app.get('/tool', (req, res) => {
-    res.sendFile(path.join(publicPath, 'index1.html'));
-});
-
-// 3. API CHẠY BOT (Thêm các cấu hình tối ưu cho Render)
 app.post('/run-bot', async (req, res) => {
     const { url } = req.body;
     let browser;
     try {
-        console.log(`[BOT]: Đang truy cập ${url}`);
         browser = await puppeteer.launch({
-            // Cấu hình bắt buộc để Puppeteer chạy được trên Docker/Render
-            args: [
-                '--no-sandbox', 
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--single-process'
-            ],
+            args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
             headless: "new"
         });
-        
         const page = await browser.newPage();
-        
-        // Giả lập trình duyệt thật để tránh bị IOE chặn
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36');
         
-        // Tăng timeout lên 60s vì Render bản free đôi khi load hơi chậm
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
-        
-        const questions = await page.evaluate(() => {
-            // Quét tất cả các class có khả năng chứa câu hỏi của IOE
-            const items = document.querySelectorAll('.question-content, .content-question, #divQuestion'); 
-            return Array.from(items).map(el => el.innerText.trim());
+
+        // Lấy danh sách câu hỏi và đáp án từ trang web
+        const quizData = await page.evaluate(() => {
+            const items = document.querySelectorAll('.question-item'); // Hãy check lại class này trên IOE
+            return Array.from(items).map(el => ({
+                question: el.querySelector('.question-content')?.innerText.trim(),
+                options: Array.from(el.querySelectorAll('.answer-item')).map(opt => opt.innerText.trim())
+            }));
         });
 
+        // AI giải và Bot tự Click
+        for (const item of quizData) {
+            if (item.question && item.options.length > 0) {
+                const bestIdx = await getAiAnswer(item.question, item.options);
+                
+                // Click vào đáp án trên trình duyệt ngầm
+                await page.evaluate((idx) => {
+                    const buttons = document.querySelectorAll('.answer-item');
+                    if(buttons[idx]) buttons[idx].click();
+                }, bestIdx);
+                
+                await new Promise(r => setTimeout(r, 1000)); // Nghỉ 1s cho an toàn
+            }
+        }
+
         await browser.close();
-        res.json({ success: true, questions: questions });
+        res.json({ success: true, message: "Bot đã hoàn thành bài thi với AI!" });
     } catch (error) {
         if (browser) await browser.close();
-        console.error(`[ERR]: ${error.message}`);
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-// 4. Lắng nghe Port (Render sẽ tự cấp cổng qua biến PORT)
-const PORT = process.env.PORT || 10000; 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`====================================`);
-    console.log(`🚀 SERVER ĐÃ CHẠY TẠI PORT: ${PORT}`);
-    console.log(`====================================`);
-});
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
