@@ -4,19 +4,18 @@
     <meta charset="utf-8">
     <title>IOE NATIVE - REAL CLOUD BOT</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --neon: #00ff88; --bg: #050505; }
         body { margin: 0; background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; }
         .wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 20px; }
         .main-title { font-family: 'Audiowide'; font-size: 42px; text-shadow: 0 0 20px var(--neon); color: #fff; margin: 0; }
-        
         .container { display: flex; gap: 20px; }
         .menu { width: 300px; background: #0a0a0a; border: 1px solid var(--neon); padding: 20px; box-shadow: 0 0 15px rgba(0,255,136,0.2); }
         .console { width: 550px; height: 400px; background: #000; border: 1px solid #222; padding: 15px; overflow-y: auto; font-size: 12px; }
-        
         input { background: #000; border: 1px solid #333; color: #fff; padding: 12px; width: 100%; box-sizing: border-box; outline: none; margin-bottom: 15px; }
-        button { width: 100%; background: var(--neon); color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        
+        button { width: 100%; background: var(--neon); color: #000; border: none; padding: 15px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        button:disabled { background: #222; color: #555; cursor: not-allowed; }
         .log-item { margin-bottom: 8px; line-height: 1.4; }
         .blue { color: #00d4ff; } .yellow { color: #ffea00; } .green { color: var(--neon); } .red { color: #ff4444; }
     </style>
@@ -29,12 +28,12 @@
         <div class="menu">
             <label style="font-size: 10px; color: #555;">$ PASTE IOE LINK</label>
             <input type="text" id="target-link" placeholder="https://ioe.vn/lam-bai/...">
-            <button onclick="startRealBot()">Kích hoạt Cloud Bot</button>
-            <p style="font-size: 9px; color: #444; margin-top: 20px;">● SERVER STATUS: <span style="color:var(--neon)">ONLINE</span></p>
+            <button id="run-btn" onclick="startRealBot()">Kích hoạt Cloud Bot</button>
+            <p style="font-size: 9px; color: #444; margin-top: 20px;">● SERVER STATUS: <span id="status-text" style="color:var(--neon)">ONLINE</span></p>
         </div>
 
         <div class="console" id="log-box">
-            <div class="log-item"><span class="blue">[SYS]</span> Đang chờ lệnh từ người dùng...</div>
+            <div class="log-item"><span class="blue">[SYS]</span> Terminal sẵn sàng. Đang chờ link...</div>
         </div>
     </div>
 </div>
@@ -42,39 +41,63 @@
 <script>
     function addLog(tag, msg, color) {
         const box = document.getElementById('log-box');
-        box.innerHTML += `<div class="log-item"><span class="${color}">[${tag}]</span> ${msg}</div>`;
+        const now = new Date().toLocaleTimeString();
+        box.innerHTML += `<div class="log-item"><span style="color:#444">${now}</span> <span class="${color}">[${tag}]</span> ${msg}</div>`;
         box.scrollTop = box.scrollHeight;
     }
 
     async function startRealBot() {
-        const url = document.getElementById('target-link').value;
-        if(!url) return;
+        const urlInput = document.getElementById('target-link').value;
+        const btn = document.getElementById('run-btn');
 
-        addLog("SYS", "Đang kết nối tới máy chủ Google Cloud...", "blue");
+        if(!urlInput.includes("ioe.vn")) {
+            addLog("ER", "Link không đúng định dạng IOE!", "red");
+            return;
+        }
+
+        // Vô hiệu hóa nút để tránh bấm nhiều lần
+        btn.disabled = true;
+        btn.innerText = "ĐANG XỬ LÝ...";
+
+        addLog("SYS", "Đang gửi yêu cầu tới máy chủ Render...", "blue");
         
-        // GỬI LINK LÊN SERVER ĐỂ CHẠY CHROME NGẦM
         try {
-            // Lưu ý: Đây là nơi bạn fetch tới API Server Node.js của bạn
-            addLog("SYS", "Đã khởi chạy trình duyệt Google Chrome ngầm.", "blue");
-            addLog("SYS", "Đang truy cập link IOE và vượt tường lửa...", "blue");
+            // Gửi link thật lên Server Node.js
+            const response = await fetch('/run-bot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: urlInput })
+            });
 
-            // GIẢ LẬP NHẬN DỮ LIỆU TỪ SERVER TRẢ VỀ
-            setTimeout(() => addLog("AI", "Đang quét nội dung câu hỏi từ DOM...", "yellow"), 2000);
-            
-            setTimeout(() => {
-                addLog("AI", "Đã lấy được 10 câu hỏi. Đang gửi dữ liệu sang AI xử lý...", "yellow");
-                addLog("MSG", "AI: 'I am analyzing the English context...'", "white");
-            }, 4000);
+            const result = await response.json();
 
-            setTimeout(() => {
-                addLog("OK", "AI đã trả về đáp án chính xác.", "green");
-                addLog("BOT", "Đang tự động click vào các ô đáp án trên IOE...", "green");
-                addLog("BOT", "Đã nhấn nút Nộp bài thành công!", "green");
-                addLog("SYS", "Tiến trình hoàn tất. Vui lòng kiểm tra điểm số.", "blue");
-            }, 7000);
+            if (result.success) {
+                addLog("OK", "Đã khởi chạy trình duyệt Google Chrome ngầm.", "green");
+                addLog("AI", `Đã lấy được ${result.questions.length} câu hỏi từ link.`, "yellow");
+                
+                result.questions.forEach((q, i) => {
+                    setTimeout(() => {
+                        addLog("BOT", `Đang giải câu ${i+1}: ${q.substring(0, 30)}...`, "blue");
+                    }, i * 500);
+                });
+
+                setTimeout(() => {
+                    addLog("OK", "AI đã tích đáp án và nhấn nộp bài thành công!", "green");
+                    addLog("SYS", "Tiến trình hoàn tất.", "blue");
+                    btn.disabled = false;
+                    btn.innerText = "Kích hoạt Cloud Bot";
+                }, result.questions.length * 500 + 1000);
+
+            } else {
+                addLog("ER", "Server báo lỗi: " + result.error, "red");
+                btn.disabled = false;
+                btn.innerText = "Kích hoạt Cloud Bot";
+            }
 
         } catch (e) {
-            addLog("ER", "Lỗi kết nối Server!", "red");
+            addLog("ER", "Không thể kết nối tới Server Render!", "red");
+            btn.disabled = false;
+            btn.innerText = "Kích hoạt Cloud Bot";
         }
     }
 </script>
