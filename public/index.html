@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IOE Native</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="particles-js"></div>
+
+    <div class="wrapper">
+        <h1 class="ioe-title">IOE Native</h1>
+
+        <div class="login-card">
+            <div id="log-area">
+                <div class="field">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="text" id="login-email" placeholder="Email address">
+                </div>
+                <div class="field">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="login-pass" placeholder="Password">
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-main" onclick="doLogin()">Login</button>
+                    <button class="btn btn-sub" onclick="swap()">Create an account</button>
+                </div>
+            </div>
+
+            <div id="reg-area" style="display: none;">
+                <div class="field">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="name" placeholder="Full name">
+                </div>
+                <div class="field">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="email" placeholder="Email address">
+                </div>
+                <div class="field">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="pass" placeholder="Password">
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-main" onclick="doRegister()">Sign up</button>
+                    <button class="btn btn-sub" onclick="swap()">Already have an account?</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
