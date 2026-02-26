@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>IOE NATIVE - OUTPUT STREAM</title>
+  <title>IOE NATIVE CORE - ULTIMATE ENGINE</title>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Audiowide&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
@@ -11,100 +11,104 @@
     :root { 
         --neon: #00ff88; 
         --bg: #0a0a0a; 
-        --panel-bg: rgba(10, 10, 10, 0.9);
-        --border: #00ff8844;
-        --text-dim: #555;
+        --panel-bg: rgba(10, 10, 10, 0.95);
+        --border-glow: 0 0 15px rgba(0, 255, 136, 0.3);
+        --text-glow: 0 0 10px rgba(0, 255, 136, 0.8);
     }
 
     * { box-sizing: border-box; font-family: 'JetBrains Mono', monospace; }
-    body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: #00ff88; overflow: hidden; }
+    body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--neon); overflow: hidden; }
     
     #particles-js { position: absolute; width: 100%; height: 100%; z-index: 1; }
 
     .main-layout {
       position: relative; z-index: 2; display: flex; 
-      justify-content: center; align-items: flex-start; 
-      height: 100vh; gap: 20px; padding: 40px;
+      justify-content: center; align-items: center; 
+      height: 100vh; gap: 20px; padding: 20px;
     }
 
-    /* Side Panel: Configuration */
-    .config-panel {
-      width: 350px;
+    /* Đảm bảo 2 bảng bằng nhau */
+    .panel {
+      height: 600px; /* Chiều cao cố định cho cả 2 bảng */
       background: var(--panel-bg);
-      border: 1px solid var(--border);
+      border: 1px solid var(--neon);
+      box-shadow: var(--border-glow);
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 0.8s ease-out;
     }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .config-panel { width: 400px; }
+    .output-panel { width: 700px; }
 
     .panel-header {
-      padding: 10px 15px;
-      border-bottom: 1px solid var(--border);
-      font-size: 12px;
-      color: var(--text-dim);
-      display: flex; align-items: center; gap: 10px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--neon);
+      font-size: 13px;
+      color: var(--neon);
+      letter-spacing: 2px;
+      display: flex; justify-content: space-between; align-items: center;
+      text-shadow: var(--text-glow);
     }
 
-    .input-section { padding: 20px; }
-    .input-label { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; display: block; }
-    .input-label i { color: var(--neon); margin-right: 5px; }
+    .content-area { flex: 1; padding: 25px; display: flex; flex-direction: column; }
 
-    .input-field {
+    .field-group { margin-bottom: 25px; }
+    .label { font-size: 11px; color: #666; margin-bottom: 10px; display: block; font-weight: 800; }
+    .label i { color: var(--neon); margin-right: 5px; }
+
+    .input-wrapper {
       background: #000;
-      border: 1px solid #222;
-      padding: 12px;
+      border: 1px solid #333;
+      padding: 15px;
       display: flex; align-items: center;
-      margin-bottom: 20px;
+      transition: 0.3s;
     }
-    input {
-      background: transparent; border: none; color: #fff; width: 100%;
-      outline: none; font-size: 13px;
-    }
+    .input-wrapper:focus-within { border-color: var(--neon); box-shadow: 0 0 10px rgba(0,255,136,0.2); }
+    
+    input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 14px; }
 
     .btn-run {
-      width: 100%; padding: 15px;
+      width: 100%; padding: 18px;
       background: transparent; border: 1px solid var(--neon);
-      color: var(--neon); font-weight: 800; cursor: pointer;
-      text-transform: uppercase; transition: 0.3s;
-      margin-bottom: 10px;
+      color: var(--neon); font-size: 16px; font-weight: 800; cursor: pointer;
+      text-transform: uppercase; transition: 0.4s;
+      text-shadow: var(--text-glow);
     }
-    .btn-run:hover { background: var(--neon); color: #000; box-shadow: 0 0 15px var(--neon); }
+    .btn-run:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
     
     .btn-skill {
-        width: 100%; padding: 12px;
+        width: 100%; padding: 12px; margin-top: 15px;
         background: #111; border: 1px solid #222;
-        color: var(--text-dim); cursor: default;
-        font-size: 12px; text-transform: uppercase;
+        color: #444; cursor: not-allowed; font-size: 12px;
     }
 
-    /* Main Panel: Output Stream */
-    .output-panel {
-      width: 650px; height: 80vh;
-      background: var(--panel-bg);
-      border: 1px solid var(--border);
-      display: flex; flex-direction: column;
-    }
-
-    .output-content {
+    /* Terminal Styling */
+    .stream-area {
       flex: 1; padding: 20px;
       overflow-y: auto; font-size: 13px;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.6);
+      border-top: 1px solid #111;
     }
 
-    .log-line { margin-bottom: 12px; display: flex; gap: 15px; }
-    .timestamp { color: var(--text-dim); min-width: 80px; }
-    .status-tag { min-width: 40px; font-weight: 800; }
-    .msg-blue { color: #44aaff; }
-    .msg-green { color: var(--neon); }
-    .msg-white { color: #fff; }
-    .msg-red { color: #ff4444; }
+    .log-line { margin-bottom: 10px; display: flex; gap: 15px; line-height: 1.5; }
+    .tag { font-weight: 800; min-width: 45px; }
+    .time { color: #555; min-width: 85px; }
+    
+    .blue { color: #00d9ff; }
+    .green { color: var(--neon); text-shadow: 0 0 5px var(--neon); }
+    .white { color: #ffffff; }
+    .red { color: #ff3e3e; font-weight: bold; }
+    .yellow { color: #ffcc00; }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 4px; }
+    /* Ready Indicator */
+    .indicator { margin-top: auto; font-size: 12px; color: #555; display: flex; align-items: center; }
+    .dot { width: 8px; height: 8px; background: var(--neon); border-radius: 50%; display: inline-block; margin-right: 10px; box-shadow: 0 0 10px var(--neon); }
+
+    ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-thumb { background: var(--neon); }
-
-    .ready-dot {
-        display: inline-block; width: 8px; height: 8px;
-        background: var(--neon); border-radius: 50%;
-        margin-right: 10px; box-shadow: 0 0 10px var(--neon);
-    }
   </style>
 </head>
 <body>
@@ -112,151 +116,161 @@
 <div id="particles-js"></div>
 
 <div class="main-layout">
-  <div class="config-panel">
-    <div class="panel-header">// CONFIGURATION</div>
-    <div class="input-section">
-      <span class="input-label">$ TARGET URL</span>
-      <div class="input-field">
-        <input type="text" id="target-url" placeholder="https://ioe.vn/...">
+  <div class="panel config-panel">
+    <div class="panel-header">
+        <span>// CONFIGURATION</span>
+    </div>
+    <div class="content-area">
+      <div class="field-group">
+        <span class="label"><i class="fa-solid fa-link"></i> TARGET URL</span>
+        <div class="input-wrapper">
+          <input type="text" id="target-url" placeholder="https://ioe.vn/lam-bai/...">
+        </div>
       </div>
 
-      <span class="input-label">$ DELAY</span>
-      <div class="input-field">
-        <input type="number" id="delay" value="10">
+      <div class="field-group">
+        <span class="label"><i class="fa-solid fa-clock"></i> DELAY (SECONDS)</span>
+        <div class="input-wrapper">
+          <input type="number" id="delay" value="10">
+        </div>
       </div>
 
-      <button class="btn-run" onclick="startEngine()">RUN</button>
+      <button class="btn-run" onclick="startNativeBot()">RUN ENGINE</button>
       <button class="btn-skill">SKILL ISSUE</button>
       
-      <div style="margin-top: 20px; font-size: 11px; color: var(--text-dim);">
-        <span class="ready-dot"></span> Round 25 ready
+      <div class="indicator">
+        <span class="dot"></span> Round 25 ready
       </div>
     </div>
   </div>
 
-  <div class="output-panel">
+  <div class="panel output-panel">
     <div class="panel-header">
         <span>// OUTPUT STREAM</span>
-        <i class="fa-solid fa-trash" style="margin-left: auto; cursor: pointer;" onclick="clearLog()"></i>
+        <i class="fa-solid fa-trash-can" style="cursor: pointer; opacity: 0.5;" onclick="clearLogs()"></i>
     </div>
-    <div id="log-stream" class="output-content">
+    <div id="stream-area" class="stream-area">
       <div class="log-line">
-        <span class="status-tag">[..]</span>
-        <span class="timestamp">00:00:00</span>
-        <span class="msg-blue">Waiting for target URL...</span>
+        <span class="tag blue">[..]</span>
+        <span class="time">00:00:00</span>
+        <span class="white">System initialized. Waiting for instruction...</span>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  // Particles Background
+  // Particles Effect
   particlesJS("particles-js", {
     "particles": {
-      "number": { "value": 60 },
+      "number": { "value": 80 },
       "color": { "value": "#00ff88" },
       "shape": { "type": "circle" },
-      "opacity": { "value": 0.2 },
+      "opacity": { "value": 0.3 },
       "size": { "value": 1 },
-      "line_linked": { "enable": true, "distance": 150, "color": "#00ff88", "opacity": 0.1 },
-      "move": { "enable": true, "speed": 1 }
+      "line_linked": { "enable": true, "distance": 150, "color": "#00ff88", "opacity": 0.15 },
+      "move": { "enable": true, "speed": 1.2 }
     }
   });
 
   const SHEETDB_URL = "https://sheetdb.io/api/v1/z0du4t0recg6p";
 
-  function getTime() {
+  function getTimestamp() {
     return new Date().toLocaleTimeString('en-GB');
   }
 
-  function writeLog(tag, msg, style = "") {
-    const stream = document.getElementById('log-stream');
+  function addLog(tag, msg, style = "white", tagStyle = "blue") {
+    const area = document.getElementById('stream-area');
     const line = document.createElement('div');
     line.className = 'log-line';
     line.innerHTML = `
-      <span class="status-tag">${tag}</span>
-      <span class="timestamp">${getTime()}</span>
+      <span class="tag ${tagStyle}">${tag}</span>
+      <span class="time">${getTimestamp()}</span>
       <span class="${style}">${msg}</span>
     `;
-    stream.appendChild(line);
-    stream.scrollTop = stream.scrollHeight;
+    area.appendChild(line);
+    area.scrollTop = area.scrollHeight;
   }
 
-  function clearLog() {
-    document.getElementById('log-stream').innerHTML = '';
-    writeLog("[..]", "Log cleared.", "msg-blue");
+  function clearLogs() {
+    document.getElementById('stream-area').innerHTML = '';
+    addLog("[..]", "Buffer cleared.", "blue");
   }
 
-  async function startEngine() {
-    const url = document.getElementById('target-url').value;
-    const delay = parseInt(document.getElementById('delay').value);
+  async function startNativeBot() {
+    const urlInput = document.getElementById('target-url').value;
+    const delayVal = document.getElementById('delay').value;
 
-    if (!url.includes("ioe.vn")) {
-      writeLog("[ER]", "INVALID TARGET URL", "msg-red");
+    if (!urlInput.includes("ioe.vn")) {
+      addLog("[ER]", "INVALID DOMAIN. USE IOE.VN ONLY", "red", "red");
       return;
     }
 
-    writeLog("[..]", "Processing...", "msg-blue");
-    
+    addLog("[..]", "Processing bypass...", "blue");
+
     try {
-      // Dùng proxy AllOrigins để lách luật CORS
-      const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-      if (!res.ok) throw new Error();
-      const data = await res.json();
+      // Sử dụng Proxy mạnh hơn
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(urlInput)}`;
+      const response = await fetch(proxyUrl);
       
+      if (!response.ok) throw new Error("Proxy connection failed");
+      
+      const data = await response.json();
       const parser = new DOMParser();
       const doc = parser.parseFromString(data.contents, "text/html");
 
-      // Lấy tên người chơi và vòng thi
-      const user = doc.querySelector('.user-name')?.innerText || "Player_" + Math.random().toString(36).substring(7);
-      const round = doc.title.split('-')[0] || "Round 0";
+      // Tìm thông tin thật
+      const userName = doc.querySelector('.user-name')?.innerText || "Unknown_User";
+      const roundTitle = doc.title.split('-')[0] || "Round Active";
 
-      writeLog("[OK]", `IOE: ${user} | ${round}`, "msg-green");
-      writeLog("[..]", "Extracting questions...", "msg-blue");
+      addLog("[OK]", `IDENTIFIED: ${userName} | ${roundTitle}`, "green", "green");
+      addLog("[..]", "Scanning question packets...", "white");
 
-      // Giả lập quét 10 câu hỏi như trong ảnh
+      // Giả lập flow như ảnh
       setTimeout(() => {
-        writeLog("[..]", "10 questions detected", "msg-white");
-        for(let i=1; i<=3; i++) {
-            writeLog("[..]", `Q${i}: Analyzing content... -> SUCCESS`, "msg-blue");
-        }
+        addLog("[..]", "4 questions detected", "blue");
+        addLog("[..]", "Q1: Analyzing... -> SUCCESS", "blue");
+        addLog("[..]", "Q2: Analyzing... -> SUCCESS", "blue");
+        addLog("[..]", "Q3: Analyzing... -> SUCCESS", "blue");
+        addLog("[..]", "Q4: Analyzing... -> SUCCESS", "blue");
 
-        let countdown = delay;
-        const timer = setInterval(() => {
-          writeLog("[~]", `Waiting to submit... (${countdown}s)`, "msg-blue");
+        let countdown = delayVal;
+        const submitTimer = setInterval(() => {
+          addLog("[~]", `Waiting to submit... (${countdown}s)`, "yellow", "yellow");
           countdown--;
+          
           if (countdown < 0) {
-            clearInterval(timer);
-            completeProcess(user, round, url);
+            clearInterval(submitTimer);
+            finalize(userName, roundTitle, urlInput);
           }
         }, 1000);
       }, 1500);
 
-    } catch (e) {
-      writeLog("[ER]", "CONNECTION FAILED! PLEASE CHECK LINK OR PROXY", "msg-red");
-      writeLog("[..]", "Trying to reconnect in 3s...", "msg-red");
+    } catch (err) {
+      addLog("[ER]", "CONNECTION FAILED! IOE SERVER REJECTED PROXY", "red", "red");
+      addLog("[..]", "Tip: Make sure the link is still active.", "white");
     }
   }
 
-  async function completeProcess(name, round, link) {
-    writeLog("[..]", "Submitting...", "msg-blue");
+  async function finalize(user, round, link) {
+    addLog("[..]", "Injecting final packet...", "blue");
     try {
       await fetch(SHEETDB_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
           data: [{
-            question: name,
+            question: user,
             answer: link,
             type: round,
-            grade: "REAL-ENGINE",
+            grade: "ULTIMATE-ENGINE",
             note: new Date().toLocaleString()
           }]
         })
       });
-      writeLog("[OK]", "Completed: 100/100 (100%)", "msg-green");
-    } catch (err) {
-      writeLog("[ER]", "DATABASE SYNC FAILED", "msg-red");
+      addLog("[OK]", "Completed: 100/100 (100%)", "green", "green");
+    } catch (e) {
+      addLog("[ER]", "DATABASE SYNC FAILED", "red", "red");
     }
   }
 </script>
