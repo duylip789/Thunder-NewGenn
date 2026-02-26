@@ -7,7 +7,6 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// CẤU HÌNH AI
 const genAI = new GoogleGenerativeAI("AIzaSyD-Npu4679JQ-aIhiv9IdRZjt69R7k6ydM");
 
 async function getAiAnswer(question, options) {
@@ -17,7 +16,6 @@ async function getAiAnswer(question, options) {
         Question: ${question}
         Options: ${options.map((opt, i) => i + ": " + opt).join(", ")}
         Task: Return ONLY the number (0, 1, 2, or 3) of the correct answer. No explanation.`;
-
         const result = await model.generateContent(prompt);
         const text = result.response.text().trim();
         const match = text.match(/\d/);
@@ -30,16 +28,14 @@ async function getAiAnswer(question, options) {
 
 app.post('/run-bot', async (req, res) => {
     const { url } = req.body;
-    if (!url) return res.status(400).json({ success: false, error: "Thiếu URL bài thi!" });
+    if (!url) return res.status(400).json({ success: false, error: "Thiếu URL!" });
 
     let browser;
     try {
-        console.log(`[SYS] Đang khởi động trình duyệt...`);
+        console.log(`[SYS] Đang tìm kiếm trình duyệt...`);
         
-        // SỬA ĐOẠN NÀY ĐỂ FIX LỖI "NO EXECUTABLE FOUND"
         browser = await puppeteer.launch({
-            // Trên Render, Puppeteer sẽ tải Chromium vào thư mục /home/render/.cache/...
-            // Chúng ta không set executablePath để nó tự động dùng bản đã cài qua render-build.sh
+            // ĐỂ TRỐNG executablePath để Puppeteer tự dùng bản nó đã tải về trong thư mục .cache
             args: [
                 '--no-sandbox', 
                 '--disable-setuid-sandbox', 
@@ -53,7 +49,7 @@ app.post('/run-bot', async (req, res) => {
         const page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36');
         
-        // Tăng timeout vì máy chủ Render Free cần thời gian khởi động Chrome
+        console.log(`[SYS] Đang truy cập IOE...`);
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 90000 });
 
         const quizData = await page.evaluate(() => {
@@ -64,28 +60,19 @@ app.post('/run-bot', async (req, res) => {
             }));
         });
 
-        console.log(`[BOT] Tìm thấy ${quizData.length} câu hỏi.`);
-
         for (const item of quizData) {
             if (item.question && item.options.length > 0) {
                 const bestIdx = await getAiAnswer(item.question, item.options);
-                console.log(`[AI] Giải câu: ${item.question.substring(0, 20)}... -> Đáp án: ${bestIdx}`);
-
                 await page.evaluate((idx) => {
                     const buttons = document.querySelectorAll('.answer-item, .option-item, .ans-item');
-                    if(buttons[idx]) {
-                        buttons[idx].click();
-                        return true;
-                    }
-                    return false;
+                    if(buttons[idx]) buttons[idx].click();
                 }, bestIdx);
-                
                 await new Promise(r => setTimeout(r, 1500)); 
             }
         }
 
         await browser.close();
-        res.json({ success: true, message: "Bot đã hoàn thành bài thi với AI!" });
+        res.json({ success: true, message: "Bot đã làm xong!" });
 
     } catch (error) {
         console.error("[ERR]", error.message);
@@ -95,8 +82,4 @@ app.post('/run-bot', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`====================================`);
-    console.log(`🚀 SERVER ĐÃ CHẠY TẠI PORT: ${PORT}`);
-    console.log(`====================================`);
-});
+app.listen(PORT, '0.0.0.0', () => console.log(`🚀 Server Ready on Port ${PORT}`));
