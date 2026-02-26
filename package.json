@@ -1,17 +1,16 @@
 {
-  "name": "Thunder-NewGenn",
+  "name": "ioe-native-bot",
   "version": "1.0.0",
+  "description": "Bot IOE AI Native",
   "main": "server.js",
-  "dependencies": {
-    "express": "^4.18.2",
-    "puppeteer": "^21.0.0"
-  },
   "scripts": {
-    "start": "node server.js"
-  }
+    "start": "node server.js",
+    "build": "chmod a+x render-build.sh && ./render-build.sh"
+  },
   "dependencies": {
     "express": "^4.18.2",
     "puppeteer": "^21.0.0",
-    "@google/generative-ai": "^0.1.0"
-}
+    "@google/generative-ai": "^0.1.0",
+    "path": "^0.12.7"
+  }
 }
